@@ -1,0 +1,194 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Facebook App Starter Kit</title>
+	<meta name="description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api.">
+	<meta name="author" content="Matthew Wilber">
+	<meta property="og:title" content="Facebook App Starter Kit" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://apps.facebook.com/appstarterkit/" />
+	<meta property="og:image" content="https://fask.herokuapp.com/images/fask.png" />
+	<meta property="og:site_name" content="https://fask.herokuapp.com/" />
+	<meta property="fb:admins" content="631337813" />
+	<meta property="og:description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api." />
+
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/demo.css">
+	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
+
+	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+	
+	<script type="text/javascript" src="js/config.js"></script>
+	
+	<style type="text/css">
+		label{
+			clear:left;
+			float:left;
+			width:100px;
+			text-align: right;
+			margin-right:20px;
+			display:block;
+			margin-bottom:10px;
+		}
+		input, select, button{
+			float:left;
+			margin-bottom:10px;
+		}
+		input{
+			width:300px;
+		}
+	</style>
+
+</head>
+<body>
+<div id="container">
+	<header>
+		<img src="images/fask.png" height="150" width="150"/>
+		<h2>Facebook App</h2>
+		<h1>Starter Kit</h1>	
+	</header>
+	<div id="main" role="main">
+		<!--! begin app content -->
+		<h3>Post a custom message to your pages</h3>
+		<form>
+			<label>Page:</label><select id="pages"></select>
+			<label>Message:</label><input id="postmessage" type="text"/>
+			<label>Title:</label><input id="posttitle" type="text"/>
+			<label>Link URL:</label><input id="postlinkurl" type="text"/>
+			<label>Image URL:</label><input id="postimageurl" type="text"/>
+			<label>Caption:</label><input id="postcaption" type="text"/>
+			<label>Description:</label><input id="postdescription" type="text"/>
+			<label>&nbsp;</label><button onclick="PostMessage(); return false;">POST</button>
+		</form>
+		<!--! end app content -->
+	</div>
+	<div id="fb-root"></div>
+	<div id="jfmfs-dialog">
+		<a href="#" class="button" onclick="$(this).parent().hide(); return false;">Close</a>
+		<label>Message:</label><textarea id="jfmfs-message"></textarea>
+		<div id="jfmfs-container"></div>
+		<button id="jfmfs-post" class="button">POST</button>
+	</div>
+</div> <!--! end of #container -->
+<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+<script src="js/script.js"></script>
+<script src="js/fb.js"></script>
+<script type="text/javascript">
+
+	var page_access_token = "";
+
+	$(document).ready(function(){
+		Login();
+	});
+
+	$('body').bind('AuthorizedUser', function(event, authObj) {
+		FB.api('/me/permissions', function (response) {
+		    if(response.data[0].manage_pages){
+		    	GetPages();
+		    }else{
+		    	FB.ui({
+				    method: 'permissions.request',
+				    perms: 'manage_pages,publish_stream',
+				    display: 'popup'
+				    },function(response) {
+				        alert(response.toSource());
+				        if (response && response.perms) {
+				            GetPages();
+				        } else if (!response.perms){
+				            alert('User did not authorize permission(s).');
+				        }
+				});
+		    }
+		});
+	});
+		
+	function GetPages(){
+		FB.api('/me/accounts','get',{},
+		function(response){
+			DebugOut(response.data);
+			page_access_token = response.data;
+			
+			var options = $("#pages");
+			$.each(page_access_token, function() {
+				if( this.id == FBconfig.app.id ){
+					options.append($("<option />").val(this.id).text(this.name).attr('selected','selected'));
+				}else{
+					options.append($("<option />").val(this.id).text(this.name));	
+				}
+			});
+		});
+	}
+	
+	function PostMessage(){
+		
+		$.each(page_access_token, function() {
+		    //options.append($("<option />").val(this.id).text(this.name));
+		    if( $("#pages").val() == this.id ){
+		    	DebugOut('posting to: '+this.name);
+				HandlePost(this);
+				return false;
+		    }
+		});
+	}
+	
+	function HandlePost(datoken){
+	    $.post("https://graph.facebook.com/"+datoken.id+"/feed", 
+		{ 
+			access_token: datoken.access_token, 
+			name: $('#posttitle').val(),
+			link: $('#postlinkurl').val(),
+			picture: $('#postimageurl').val(),
+			caption: $('#postcaption').val(),
+			description: $('#postdescription').val(),
+			message: $('#postmessage').val()
+		},
+		function(data){
+			DebugOut(data);
+			if(data.id){
+				alert('post successful');
+			}else{
+				alert('post error. Check console for return details');
+			}
+		});
+	}
+	
+	
+	
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-76054-11']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+	<script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+<![endif]-->
+
+</body>
+</html>
