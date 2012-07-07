@@ -5,6 +5,9 @@
 var imgMonsterARun = new Image();
 var canvas;
 var stage;
+var screen_width;
+var screen_height;
+
 
 var actors = new Array();
 
@@ -18,7 +21,18 @@ $(document).ready(function(){
 	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	//SetFrame();
 	
-	init();
+	screen_width = document.getElementById("gamecanvas").width;
+	screen_height = document.getElementById("gamecanvas").height;
+
+	
+	// create a new stage and point it at our canvas:
+	stage = new createjs.Stage(document.getElementById("gamecanvas"));
+	
+	createjs.Ticker.setFPS(30);
+	createjs.Ticker.addListener(window);
+	
+	$.get('json/ship.json', HandleActorJson, "json");
+	$.get('json/monster.json', HandleActorJson, "json");
 	
 });
 
@@ -53,28 +67,49 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 //	Game Functions
 /////////////////////////////////////////////////////////////////////////////
 
-function init() {
 
-	// create a new stage and point it at our canvas:
-	stage = new createjs.Stage(document.getElementById("gamecanvas"));
-	
-	$.get('json/ship.json', HandleActorJson, "json");
-}
+
 
 function HandleActorJson(response){
 	// Define a spritesheet. Note that this data was exported by Zoë.
 	var ss = new createjs.SpriteSheet(response.spritesheet);
+	
+	//createjs.SpriteSheetUtils.addFlippedFrames(ss, true, false, false);
 
 	var grant = new createjs.BitmapAnimation(ss);
 	grant.x = response.init.position.x;
 	grant.y = response.init.position.y;
+	grant.name = response.init.name;
+	grant.vX = response.init.vX;
+	
+	grant.move = function(){
+		// Hit testing the screen width, otherwise our sprite would disappear
+	    if ( (this.x >= screen_width - 16) || (this.x < 16) ){
+	        // We've reached the right side of our screen
+	        // We need to walk left now to go back to our initial position
+	        this.vX = -this.vX;
+	    }
+	
+	    this.x -= this.vX;
+	};
 
 	grant.gotoAndPlay(response.init.startkey);
+	
+	actors.push(grant);
 
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-	stage.addChild(grant);
-	createjs.Ticker.setFPS(response.init.fps);
-	createjs.Ticker.addListener(stage);
+	stage.addChild(actors[actors.length-1]);
+}
+
+function tick(){
+	for( idx in actors ){
+		if(actors[idx].name == "monster"){
+			actors[idx].move();
+		}
+	}
+	
+	// Redraw canvas
+	stage.update();
 }
 
 

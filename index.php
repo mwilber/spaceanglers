@@ -52,11 +52,10 @@
 <body>
 <div id="container">
 	<header>
-		<img src="images/fask.png" height="150" width="150"/>
 		<h2>InsertTitleHere</h2>
 	</header>
 	<div id="main" role="main">
-		<canvas id="gamecanvas" width="960" height="400"></canvas>
+		<canvas id="gamecanvas" width="800" height="600"></canvas>
 	</div>
 	<div id="fb-root"></div>
 	<div id="jfmfs-dialog">
