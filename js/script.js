@@ -2,14 +2,23 @@
 
 */
 
+var imgMonsterARun = new Image();
+var canvas;
+var stage;
+
+var actors = new Array();
+
+
 /////////////////////////////////////////////////////////////////////////////
 //	Event Handlers
 /////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function(){
 	
-	FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
-	SetFrame();
+	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
+	//SetFrame();
+	
+	init();
 	
 });
 
@@ -39,6 +48,35 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 		window.location = FBconfig.likegate.gatepage;
 	}
 });
+
+/////////////////////////////////////////////////////////////////////////////
+//	Game Functions
+/////////////////////////////////////////////////////////////////////////////
+
+function init() {
+
+	// create a new stage and point it at our canvas:
+	stage = new createjs.Stage(document.getElementById("gamecanvas"));
+	
+	$.get('json/ship.json', HandleActorJson, "json");
+}
+
+function HandleActorJson(response){
+	// Define a spritesheet. Note that this data was exported by Zoë.
+	var ss = new createjs.SpriteSheet(response.spritesheet);
+
+	var grant = new createjs.BitmapAnimation(ss);
+	grant.x = response.init.position.x;
+	grant.y = response.init.position.y;
+
+	grant.gotoAndPlay(response.init.startkey);
+
+	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+	stage.addChild(grant);
+	createjs.Ticker.setFPS(response.init.fps);
+	createjs.Ticker.addListener(stage);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 //	Utility Functions

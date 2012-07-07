@@ -1,0 +1,28 @@
+{
+	"spritesheet":
+		{
+			"animations":
+			{
+				"spin": [0, 5, "spin"]
+			},
+			"images": ["images/anim_ship.png"],
+			"frames":
+			{
+				"regX": 0,
+				"regY": 0,
+				"height": 63,
+				"width":191.8333,
+				"count": 6
+			}
+		},
+	"init":
+	{
+		"position":
+		{
+			"x":100,
+			"y":25
+		},
+		"fps":30,
+		"startkey":"spin"
+	}
+}

@@ -210,6 +210,11 @@ table { border-collapse: collapse; border-spacing: 0; }
 	display:none;
 }
 
+/*#gamecanvas{
+	width: 800px;
+	height: 600px;
+}*/
+
 #fb-root{
 	clear:both;
 }
