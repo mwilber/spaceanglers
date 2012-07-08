@@ -73,8 +73,9 @@
 <script src="js/fb.js"></script>
 
 <!-- Load Game Files -->
-<script src="js/ship.js"></script>
-<script src="js/monster.js"></script>
+<script src="js/cActor.js"></script>
+<script src="js/cShip.js"></script>
+<script src="js/cMonster.js"></script>
 
 <script type="text/javascript" src="js/libs/jquery.facebook.multifriend.select.js"></script>
 <script type="text/javascript">

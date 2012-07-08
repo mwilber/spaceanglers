@@ -38,10 +38,10 @@ $(document).ready(function(){
 	
 	actors.push(new Ship("player1"));
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-	stage.addChild(actors[actors.length-1].sprite);
+	stage.addChild(actors[actors.length-1].actor.sprite);
 	
 	actors.push(new Monster("monster1"));
-	stage.addChild(actors[actors.length-1].sprite);
+	stage.addChild(actors[actors.length-1].actor.sprite);
 	
 });
 
@@ -86,7 +86,7 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 
 function tick(){
 	for( idx in actors ){
-		actors[idx].move();
+		actors[idx].Move();
 	}
 	
 	// Redraw canvas
