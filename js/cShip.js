@@ -30,5 +30,10 @@ function Ship(pName) {
 
 Ship.prototype.Move = function() {
 	
+	 // Do not let the ship fly lower than the ceiling
+    if(mousePos.y > screen_height-presets.ceiling){
+    	mousePos.y = screen_height-presets.ceiling;
+    }
+	
 	this.actor.SetPos({'x':mousePos.x-(this.actor.width/2), 'y':mousePos.y-(this.actor.height/2)});
 }

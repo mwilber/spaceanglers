@@ -202,8 +202,8 @@ table { border-collapse: collapse; border-spacing: 0; }
    ========================================================================== */
 
 #container{
-	width:520px;
-	margin: 0px auto;
+	width:100%;
+	margin: 0px 50px;
 }
 
 #like, #nolike{
@@ -212,6 +212,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 
 #gamecanvas{
 	cursor: none;
+	background-color:#002070;
 }
 
 #fb-root{

@@ -27,6 +27,12 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
 	
+	<script>
+		// this sets the namespace for CreateJS to the window object, so you can instantiate objects without specifying 
+		// the namespace: "new Graphics()" instead of "new createjs.Graphics()"
+		var createjs = window;
+	</script>
+	
 	<script src="js/libs/easeljs/utils/UID.js"></script>
 	<script src="js/libs/easeljs/geom/Matrix2D.js"></script>
 	<script src="js/libs/easeljs/events/MouseEvent.js"></script>
@@ -36,6 +42,8 @@
 	<script src="js/libs/easeljs/display/DisplayObject.js"></script>
 	<script src="js/libs/easeljs/display/Container.js"></script>
 	<script src="js/libs/easeljs/display/Stage.js"></script>
+	<script src="js/libs/easeljs/display/Graphics.js"></script>
+	<script src="js/libs/easeljs/display/Shape.js"></script>
 	<script src="js/libs/easeljs/display/Bitmap.js"></script>
 	<script src="js/libs/easeljs/display/BitmapAnimation.js"></script>
 	<script src="js/libs/easeljs/display/Text.js"></script>
@@ -46,7 +54,7 @@
 
 	<script src="js/libs/modernizr-2.0.6.min.js"></script>
 	
-	<script type="text/javascript" src="js/config.js"></script>
+	<script type="text/javascript" src="js/fbconfig.js"></script>
 	
 </head>
 <body>
@@ -55,7 +63,7 @@
 		<h2>InsertTitleHere</h2>
 	</header>
 	<div id="main" role="main">
-		<canvas id="gamecanvas" width="800" height="600"></canvas>
+		<canvas id="gamecanvas" width="800" height="500"></canvas>
 	</div>
 	<div id="fb-root"></div>
 	<div id="jfmfs-dialog">
@@ -76,6 +84,7 @@
 <script src="js/cActor.js"></script>
 <script src="js/cShip.js"></script>
 <script src="js/cMonster.js"></script>
+<script src="js/cBeam.js"></script>
 
 <script type="text/javascript" src="js/libs/jquery.facebook.multifriend.select.js"></script>
 <script type="text/javascript">

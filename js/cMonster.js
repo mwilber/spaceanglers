@@ -1,4 +1,4 @@
-function Monster(pName) {
+function Monster(pName, pStartX, pStartY) {
 	
 	this.status = "ready";
 	
@@ -27,8 +27,8 @@ function Monster(pName) {
 			}
 		},
 		"position":{
-			"x":20,
-			"y":300
+			"x":pStartX,
+			"y":pStartY
 		}
 	});
 }
@@ -36,6 +36,8 @@ function Monster(pName) {
 Monster.prototype.Move = function() {
 
 	if ( (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
+		this.velocity.x = -this.velocity.x;
+	}else if( Math.floor(Math.random()*50) == 0 ){
 		this.velocity.x = -this.velocity.x;
 	}
 	

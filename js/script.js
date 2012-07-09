@@ -11,9 +11,18 @@ var mousePos = {
 	"x":0,
 	"y":0
 }
-
-
 var actors = new Array();
+var beamIdx = -1;
+var presets = {
+	margin: 100,
+	g: 0.2,			// Gravity
+	beampwr: 2,		// speed beam lifts actors
+	ground: 50,		// y distance from bottom actors are spawned
+	ceiling: 150,	// min height ship can reach
+	lastlevel: 3, 	// # represents array idx
+	dmgBullet: 1,
+	dmgShell: 10,
+};
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -35,12 +44,19 @@ $(document).ready(function(){
 	createjs.Ticker.setFPS(30);
 	createjs.Ticker.addListener(window);
 	
+	for( idx=0; idx<5; idx++ ){
+		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
+		actors.push(new Monster("monster"+idx, tmpPos, screen_height-presets.ground));
+		stage.addChild(actors[actors.length-1].actor.sprite);	
+	}
 	
-	actors.push(new Ship("player1"));
-	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+	actors.push(new Beam("p1_beam"));
 	stage.addChild(actors[actors.length-1].actor.sprite);
+	// Keep tabs on the beam for hte mouse events
+	beamIdx = actors.length-1;
 	
-	actors.push(new Monster("monster1"));
+	actors.push(new Ship("p1"));
+	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
 	stage.addChild(actors[actors.length-1].actor.sprite);
 	
 });
@@ -52,6 +68,15 @@ $('#gamecanvas').mousemove(function(e) {
     //var coordinateDisplay = "x=" + x + ", y=" + y;
     //writeCoordinateDisplay(coordinateDisplay);
 });
+
+$('#gamecanvas').mousedown(function(e) {
+    actors[beamIdx].On();
+});
+
+$('#gamecanvas').mouseup(function(e) {
+    actors[beamIdx].Off();
+});
+
 
 $('body').bind('AuthorizedUser', function(event, authObj) {
 	fb_auth.id = authObj.authResponse.userID;
