@@ -15,7 +15,7 @@ function Ship(pName) {
 			"frames":
 			{
 				"regX": 0,
-				"regY": 0,
+				"regY": 20,
 				"height": 63,
 				"width":191.8333,
 				"count": 6

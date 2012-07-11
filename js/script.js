@@ -44,7 +44,7 @@ $(document).ready(function(){
 	createjs.Ticker.setFPS(30);
 	createjs.Ticker.addListener(window);
 	
-	for( idx=0; idx<5; idx++ ){
+	for( idx=0; idx<1; idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		actors.push(new Monster("monster"+idx, tmpPos, screen_height-presets.ground));
 		stage.addChild(actors[actors.length-1].actor.sprite);	
@@ -111,8 +111,26 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 
 function tick(){
 	for( idx in actors ){
+		
+		
+		if( actors[idx].actor.type == "monster" ){
+			if(actors[beamIdx].actor.sprite.visible && actors[idx].hitRadius(actors[beamIdx].actor.sprite.x, 455, 0)){
+				if(actors[idx].GetStatus() != "stun"){
+					actors[idx].SetStatus("stun");
+				}
+			}else{
+				if(actors[idx].GetStatus() != "walk"){
+					actors[idx].SetStatus("walk");
+				}
+			}
+			
+		}
 		actors[idx].Move();
 	}
+	
+	//actors[beamIdx].hitPoint(400,200);
+	
+	
 	
 	// Redraw canvas
 	stage.update();

@@ -2,16 +2,17 @@ function Beam(pName) {
 	
 	this.status = "ready";
 	this.actor = new Object();
+	this.hit = 0;
 	
 	var g = new Graphics()
 		.beginFill(Graphics.getRGB(255,255,255,0.6))
-		.moveTo(115, 0).lineTo(130,screen_height).lineTo(70,screen_height).lineTo(85,0)
+		.moveTo(15, 0).lineTo(30,screen_height).lineTo(-30,screen_height).lineTo(-15,0)
 		.endStroke()
 		.beginFill(Graphics.getRGB(255,255,128,0.3))
-		.moveTo(110, 0).lineTo(115,screen_height).lineTo(85,screen_height).lineTo(90,0)
+		.moveTo(10, 0).lineTo(15,screen_height).lineTo(-15,screen_height).lineTo(-10,0)
 		.endStroke();
 	this.actor.sprite = new Shape(g);
-	this.actor.sprite.visible = false;
+	//this.actor.sprite.visible = false;
 	
 	DebugOut(this.actor.sprite);
 	this.actor.sprite.x = 100;
@@ -35,11 +36,27 @@ Beam.prototype.Move = function() {
     	mousePos.y = screen_height-presets.ceiling;
     }
 	
-	this.actor.sprite.x = mousePos.x-100;
+	this.actor.sprite.x = mousePos.x;
 	this.actor.sprite.y = mousePos.y;
 	
 	var scale = 1-(mousePos.y/screen_height);
 	
 	//DebugOut(scale);
 	this.actor.sprite.scaleY = scale;
+}
+
+Beam.prototype.hitPoint = function (tX, tY) {
+        return this.hitRadius(tX, tY, 0);
+}
+
+Beam.prototype.hitRadius = function (tX, tY, tHit) {
+	
+    //early returns speed it up
+    if (tX - tHit > this.actor.sprite.x + this.hit) { return; }
+    if (tX + tHit < this.actor.sprite.x - this.hit) { return; }
+    if (tY - tHit > this.actor.sprite.y + this.hit) { return; }
+    if (tY + tHit < this.actor.sprite.y - this.hit) { return; }
+
+    //now do the circle distance test
+    return this.hit + tHit > Math.sqrt(Math.pow(Math.abs(this.actor.sprite.x - tX), 2) + Math.pow(Math.abs(this.actor.sprite.y - tY), 2));
 }
