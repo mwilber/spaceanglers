@@ -112,26 +112,19 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 function tick(){
 	for( idx in actors ){
 		
-		
 		if( actors[idx].actor.type == "monster" ){
-			if(actors[beamIdx].actor.sprite.visible && actors[idx].hitRadius(actors[beamIdx].actor.sprite.x, 455, 0)){
+			//if(actors[beamIdx].actor.sprite.visible && actors[idx].actor.hitRadius(actors[beamIdx].actor.sprite.x, 455, 0)){
+			// Giving the beam a specialized hittest
+			if(actors[beamIdx].actor.sprite.visible && actors[beamIdx].hitTest(actors[idx].actor.GetPos())){
 				if(actors[idx].GetStatus() != "stun"){
 					actors[idx].SetStatus("stun");
 				}
-			}else{
-				if(actors[idx].GetStatus() != "walk"){
-					actors[idx].SetStatus("walk");
-				}
+				actors[idx].Levitate(5);
 			}
 			
 		}
 		actors[idx].Move();
 	}
-	
-	//actors[beamIdx].hitPoint(400,200);
-	
-	
-	
 	// Redraw canvas
 	stage.update();
 }

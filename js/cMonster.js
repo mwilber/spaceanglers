@@ -1,18 +1,10 @@
 function Monster(pName, pStartX, pStartY) {
 	
-	this.status = "walk";
-	
-	this.velocity = {
-			"x":4,
-			"y":0
-	};
-	
-	this.hit = 20;
-	
 	this.actor = new Actor({
 		"name":pName,
 		"type":"monster",
 		"startkey":"walk",
+		"status":"walk",
 		"spritesheet":{
 			"animations":
 			{
@@ -32,55 +24,64 @@ function Monster(pName, pStartX, pStartY) {
 		"position":{
 			"x":pStartX,
 			"y":pStartY
-		}
+		},
+		"velocity":{
+			"x":4,
+			"y":0
+		},
+		"radius":20
 	});
 }
 
 Monster.prototype.Move = function() {
 
-	switch(this.status){
+	switch(this.actor.status){
 		case "walk":
 			if ( (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
-				this.velocity.x = -this.velocity.x;
+				this.actor.velocity.x = -this.actor.velocity.x;
 			}else if( Math.floor(Math.random()*50) == 0 ){
-				this.velocity.x = -this.velocity.x;
+				this.actor.velocity.x = -this.actor.velocity.x;
 			}
-			
-			this.actor.SetPos({'x':this.actor.GetPos().x+this.velocity.x, 'y':this.actor.GetPos().y+this.velocity.y});
 			break;
 		case "stun":
-			
+			this.actor.velocity.x = 0;
 			break;
 	}
+	
+	//Add in gravity
+	if(this.actor.sprite.y+this.actor.velocity.y < screen_height-presets.ground){
+		//this.velocity.y *= 1.5;
+		this.actor.velocity.y += 1;
+	}else{
+		if(this.actor.status != "walk"){
+			this.actor.status = "walk";
+			this.actor.sprite.gotoAndPlay("walk");
+			this.actor.velocity.y = 0;
+			this.actor.velocity.x = 4;
+			this.actor.sprite.y = screen_height-presets.ground;
+		}
+	}
 
+	this.actor.UpdatePos();
 	
 }
 
 Monster.prototype.SetStatus = function(pStatus) {
 	
-	this.status = pStatus;
+	this.actor.status = pStatus;
 	this.actor.sprite.gotoAndPlay(pStatus);
 	
 }
 
 Monster.prototype.GetStatus = function() {
 	
-	return this.status;
+	return this.actor.status;
 	
 }
 
-Monster.prototype.hitPoint = function (tX, tY) {
-        return this.hitRadius(tX, tY, 0);
-}
-
-Monster.prototype.hitRadius = function (tX, tY, tHit) {
+Monster.prototype.Levitate = function(pAmt){
 	
-    //early returns speed it up
-    if (tX - tHit > this.actor.sprite.x + this.hit) { return; }
-    if (tX + tHit < this.actor.sprite.x - this.hit) { return; }
-    if (tY - tHit > this.actor.sprite.y + this.hit) { return; }
-    if (tY + tHit < this.actor.sprite.y - this.hit) { return; }
-
-    //now do the circle distance test
-    return this.hit + tHit > Math.sqrt(Math.pow(Math.abs(this.actor.sprite.x - tX), 2) + Math.pow(Math.abs(this.actor.sprite.y - tY), 2));
+	this.actor.velocity.y = -pAmt;
+	this.actor.sprite.x = mousePos.x;
+	
 }

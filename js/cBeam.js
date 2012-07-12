@@ -12,7 +12,7 @@ function Beam(pName) {
 		.moveTo(10, 0).lineTo(15,screen_height).lineTo(-15,screen_height).lineTo(-10,0)
 		.endStroke();
 	this.actor.sprite = new Shape(g);
-	//this.actor.sprite.visible = false;
+	this.actor.sprite.visible = false;
 	
 	DebugOut(this.actor.sprite);
 	this.actor.sprite.x = 100;
@@ -45,18 +45,14 @@ Beam.prototype.Move = function() {
 	this.actor.sprite.scaleY = scale;
 }
 
-Beam.prototype.hitPoint = function (tX, tY) {
-        return this.hitRadius(tX, tY, 0);
-}
-
-Beam.prototype.hitRadius = function (tX, tY, tHit) {
+Beam.prototype.hitTest = function( pPos ) {
 	
-    //early returns speed it up
-    if (tX - tHit > this.actor.sprite.x + this.hit) { return; }
-    if (tX + tHit < this.actor.sprite.x - this.hit) { return; }
-    if (tY - tHit > this.actor.sprite.y + this.hit) { return; }
-    if (tY + tHit < this.actor.sprite.y - this.hit) { return; }
-
-    //now do the circle distance test
-    return this.hit + tHit > Math.sqrt(Math.pow(Math.abs(this.actor.sprite.x - tX), 2) + Math.pow(Math.abs(this.actor.sprite.y - tY), 2));
+	var lBound = this.actor.sprite.x - 30;
+	var rBound = this.actor.sprite.x + 30;
+	
+	if( pPos.x > lBound && pPos.x < rBound ){
+		return true;
+	}else{
+		return false;
+	}
 }
