@@ -45,20 +45,6 @@ Actor.prototype.hitRadius = function (tX, tY, tHit) {
 
 Actor.prototype.UpdatePos = function (){
 	
-	//Add in gravity
-	if(this.sprite.y+this.velocity.y < screen_height-presets.ground){
-		//this.velocity.y *= 1.5;
-		this.velocity.y += 1;
-	}else{
-		if(this.status != "walk"){
-			this.status = "walk";
-			this.sprite.gotoAndPlay("walk");
-			this.velocity.y = 0;
-			this.velocity.x = 4;
-			this.sprite.y = screen_height-presets.ground;
-		}
-	}
-	
 	// Then update the screen position
 	this.SetPos({'x':this.GetPos().x+this.velocity.x, 'y':this.GetPos().y+this.velocity.y});
 	

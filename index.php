@@ -62,6 +62,7 @@
 	<header>
 		<h2>InsertTitleHere</h2>
 	</header>
+	<div id="abducted">Abducted: <span>0</span></div>
 	<div id="main" role="main">
 		<canvas id="gamecanvas" width="800" height="500"></canvas>
 	</div>

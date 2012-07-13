@@ -13,6 +13,7 @@ var mousePos = {
 }
 var actors = new Array();
 var beamIdx = -1;
+var shipIdx = -1;
 var presets = {
 	margin: 100,
 	g: 0.2,			// Gravity
@@ -22,7 +23,11 @@ var presets = {
 	lastlevel: 3, 	// # represents array idx
 	dmgBullet: 1,
 	dmgShell: 10,
+	maxActor: 5
 };
+var tallyMon = {
+	"abducted": 0
+}
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -44,7 +49,7 @@ $(document).ready(function(){
 	createjs.Ticker.setFPS(30);
 	createjs.Ticker.addListener(window);
 	
-	for( idx=0; idx<1; idx++ ){
+	for( idx=0; idx<presets.maxActor; idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		actors.push(new Monster("monster"+idx, tmpPos, screen_height-presets.ground));
 		stage.addChild(actors[actors.length-1].actor.sprite);	
@@ -58,6 +63,7 @@ $(document).ready(function(){
 	actors.push(new Ship("p1"));
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
 	stage.addChild(actors[actors.length-1].actor.sprite);
+	shipIdx = actors.length-1;
 	
 });
 
@@ -71,10 +77,12 @@ $('#gamecanvas').mousemove(function(e) {
 
 $('#gamecanvas').mousedown(function(e) {
     actors[beamIdx].On();
+    return false;
 });
 
 $('#gamecanvas').mouseup(function(e) {
     actors[beamIdx].Off();
+    return false;
 });
 
 
@@ -110,10 +118,10 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 /////////////////////////////////////////////////////////////////////////////
 
 function tick(){
+	var monsterCt = 0;
 	for( idx in actors ){
 		
 		if( actors[idx].actor.type == "monster" ){
-			//if(actors[beamIdx].actor.sprite.visible && actors[idx].actor.hitRadius(actors[beamIdx].actor.sprite.x, 455, 0)){
 			// Giving the beam a specialized hittest
 			if(actors[beamIdx].actor.sprite.visible && actors[beamIdx].hitTest(actors[idx].actor.GetPos())){
 				if(actors[idx].GetStatus() != "stun"){
@@ -121,12 +129,36 @@ function tick(){
 				}
 				actors[idx].Levitate(5);
 			}
-			
+			if(actors[shipIdx].actor.hitRadius(actors[idx].actor.sprite.x-95, actors[idx].actor.sprite.y, 30)){
+				Abduct(idx);	
+			}else{
+				monsterCt++;
+			}
 		}
 		actors[idx].Move();
 	}
+	if( monsterCt < presets.maxActor ){
+		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
+		actors.splice(0,0,new Monster("monster", tmpPos, screen_height-presets.ground));
+		shipIdx++;
+		beamIdx++;
+		stage.addChild(actors[0].actor.sprite);
+	}
 	// Redraw canvas
 	stage.update();
+}
+
+function Abduct(pIdx){
+	// Don't accidentally abduct the wrong thing
+	if(actors[pIdx].actor.type == "monster"){
+		stage.removeChild(actors[pIdx].actor.sprite);
+		actors.splice(pIdx,1);
+		shipIdx--;
+		beamIdx--;
+		tallyMon.abducted++;
+		DebugOut(tallyMon.abducted);
+		$('#abducted span').html(tallyMon.abducted);
+	}
 }
 
 
