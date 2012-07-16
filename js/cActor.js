@@ -13,6 +13,7 @@ function Actor(pData){
 			"y":pData.velocity.y
 	};
 	this.hit = pData.radius;
+	this.decay = 100;
 }
 
 Actor.prototype.GetPos = function(){

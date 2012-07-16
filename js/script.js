@@ -124,15 +124,13 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 
 function tick(){
 	if( gameStatus != "over" ){
-		var npCt = 0;
 		// Handle the Player Characters
 		for( idx in pChars ){
 			pChars[idx].Move();
 		}
 		// Handle the Non-Player Characters
 		for( idx in npChars ){
-			
-			if( npChars[idx].actor.type == "civilian" ){
+			if( npChars[idx].actor.status != "splat" ){
 				// Giving the beam a specialized hittest
 				if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
 					if(npChars[idx].GetStatus() != "stun"){
@@ -143,13 +141,13 @@ function tick(){
 				}
 				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-95, npChars[idx].actor.sprite.y, 30)){
 					Abduct(idx);	
-				}else{
-					npCt++;
 				}
+				npChars[idx].Move();
+			}else{
+				Decay(idx);
 			}
-			npChars[idx].Move();
 		}
-		if( npCt < presets.maxActor ){
+		if( npChars.length < presets.maxActor ){
 			Respawn();
 		}
 		EnergyUpdate(-.01);
@@ -189,6 +187,17 @@ function Abduct(pIdx){
 		tallyMon.score += presets.abductVal;
 		DebugOut(tallyMon.abducted);
 		$('#abducted span').html(tallyMon.abducted);
+	}
+}
+
+function Decay(pIdx){
+	// Don't accidentally decay the wrong thing
+	if(npChars[pIdx].actor.type == "civilian"){
+		npChars[pIdx].actor.decay-=.5;
+		if(npChars[pIdx].actor.decay <= 0){
+			stage.removeChild(npChars[pIdx].actor.sprite);
+			npChars.splice(pIdx,1);
+		}
 	}
 }
 

@@ -9,7 +9,8 @@ function Civilian(pName, pStartX, pStartY) {
 			"animations":
 			{
 				"walk": [0, 9, "walk"],
-				"stun": [11, 19, "stun"]
+				"stun": [11, 19, "stun"],
+				"splat": [10, 10, "splat"]
 			},
 			"images": ["assets/anim_monster_comp.png"],
 			"frames":
@@ -53,7 +54,13 @@ Civilian.prototype.Move = function() {
 		//this.velocity.y *= 1.5;
 		this.actor.velocity.y += 1;
 	}else{
-		if(this.actor.status != "walk"){
+		if(this.actor.status == "stun" && this.actor.velocity.y > 20){
+			this.actor.status = "splat";
+			this.actor.velocity.y = 0;
+			this.actor.velocity.x = 0;
+			this.actor.sprite.y = screen_height-presets.ground;
+			this.actor.sprite.gotoAndPlay("splat");
+		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
 			this.actor.status = "walk";
 			this.actor.sprite.gotoAndPlay("walk");
 			this.actor.velocity.y = 0;
