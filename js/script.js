@@ -11,7 +11,8 @@ var mousePos = {
 	"x":0,
 	"y":0
 }
-var actors = new Array();
+var pChars = new Array();
+var npChars = new Array();
 var beamIdx = -1;
 var shipIdx = -1;
 var presets = {
@@ -51,19 +52,20 @@ $(document).ready(function(){
 	
 	for( idx=0; idx<presets.maxActor; idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
-		actors.push(new Monster("monster"+idx, tmpPos, screen_height-presets.ground));
-		stage.addChild(actors[actors.length-1].actor.sprite);	
+		npChars.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground));
+		DebugOut("civ added: "+npChars.length);
+		stage.addChild(npChars[npChars.length-1].actor.sprite);	
 	}
 	
-	actors.push(new Beam("p1_beam"));
-	stage.addChild(actors[actors.length-1].actor.sprite);
+	pChars.push(new Beam("p1_beam"));
+	stage.addChild(pChars[pChars.length-1].actor.sprite);
 	// Keep tabs on the beam for hte mouse events
-	beamIdx = actors.length-1;
+	beamIdx = pChars.length-1;
 	
-	actors.push(new Ship("p1"));
+	pChars.push(new Ship("p1"));
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-	stage.addChild(actors[actors.length-1].actor.sprite);
-	shipIdx = actors.length-1;
+	stage.addChild(pChars[pChars.length-1].actor.sprite);
+	shipIdx = pChars.length-1;
 	
 });
 
@@ -76,12 +78,12 @@ $('#gamecanvas').mousemove(function(e) {
 });
 
 $('#gamecanvas').mousedown(function(e) {
-    actors[beamIdx].On();
+    pChars[beamIdx].On();
     return false;
 });
 
 $('#gamecanvas').mouseup(function(e) {
-    actors[beamIdx].Off();
+    pChars[beamIdx].Off();
     return false;
 });
 
@@ -118,31 +120,34 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 /////////////////////////////////////////////////////////////////////////////
 
 function tick(){
-	var monsterCt = 0;
-	for( idx in actors ){
+	var npCt = 0;
+	// Handle the Player Characters
+	for( idx in pChars ){
+		pChars[idx].Move();
+	}
+	// Handle the Non-Player Characters
+	for( idx in npChars ){
 		
-		if( actors[idx].actor.type == "monster" ){
+		if( npChars[idx].actor.type == "civilian" ){
 			// Giving the beam a specialized hittest
-			if(actors[beamIdx].actor.sprite.visible && actors[beamIdx].hitTest(actors[idx].actor.GetPos())){
-				if(actors[idx].GetStatus() != "stun"){
-					actors[idx].SetStatus("stun");
+			if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
+				if(npChars[idx].GetStatus() != "stun"){
+					npChars[idx].SetStatus("stun");
 				}
-				actors[idx].Levitate(5);
+				npChars[idx].Levitate(5);
 			}
-			if(actors[shipIdx].actor.hitRadius(actors[idx].actor.sprite.x-95, actors[idx].actor.sprite.y, 30)){
+			if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-95, npChars[idx].actor.sprite.y, 30)){
 				Abduct(idx);	
 			}else{
-				monsterCt++;
+				npCt++;
 			}
 		}
-		actors[idx].Move();
+		npChars[idx].Move();
 	}
-	if( monsterCt < presets.maxActor ){
+	if( npCt < presets.maxActor ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
-		actors.splice(0,0,new Monster("monster", tmpPos, screen_height-presets.ground));
-		shipIdx++;
-		beamIdx++;
-		stage.addChild(actors[0].actor.sprite);
+		npChars.splice(0,0,new Civilian("civilian", tmpPos, screen_height-presets.ground));
+		stage.addChild(npChars[0].actor.sprite);
 	}
 	// Redraw canvas
 	stage.update();
@@ -150,11 +155,9 @@ function tick(){
 
 function Abduct(pIdx){
 	// Don't accidentally abduct the wrong thing
-	if(actors[pIdx].actor.type == "monster"){
-		stage.removeChild(actors[pIdx].actor.sprite);
-		actors.splice(pIdx,1);
-		shipIdx--;
-		beamIdx--;
+	if(npChars[pIdx].actor.type == "civilian"){
+		stage.removeChild(npChars[pIdx].actor.sprite);
+		npChars.splice(pIdx,1);
 		tallyMon.abducted++;
 		DebugOut(tallyMon.abducted);
 		$('#abducted span').html(tallyMon.abducted);
