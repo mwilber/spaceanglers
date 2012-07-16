@@ -62,7 +62,10 @@
 	<header>
 		<h2>InsertTitleHere</h2>
 	</header>
-	<div id="abducted">Abducted: <span>0</span></div>
+	<div id="scoreboard">
+		<div id="abducted">Abducted: <span>0</span></div>
+		<div id="energy">Energy: <span>100%</span></div>
+	</div>
 	<div id="main" role="main">
 		<canvas id="gamecanvas" width="800" height="500"></canvas>
 	</div>
@@ -74,6 +77,10 @@
 		<button id="jfmfs-post" class="button">POST</button>
 	</div>
 </div> <!--! end of #container -->
+<div id="endgame" class="dialog">
+	<h2>Game Over</h2>
+	<div id="score">Final Score: <span>0</span></div>
+</div>
 <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>

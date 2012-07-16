@@ -24,12 +24,15 @@ var presets = {
 	lastlevel: 3, 	// # represents array idx
 	dmgBullet: 1,
 	dmgShell: 10,
-	maxActor: 5
+	maxActor: 5,
+	abductVal: 100
 };
 var tallyMon = {
-	"abducted": 0
+	"abducted": 0,
+	"energy": 100,
+	"score": 0
 }
-
+var gameStatus = "start";
 
 /////////////////////////////////////////////////////////////////////////////
 //	Event Handlers
@@ -120,37 +123,61 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 /////////////////////////////////////////////////////////////////////////////
 
 function tick(){
-	var npCt = 0;
-	// Handle the Player Characters
-	for( idx in pChars ){
-		pChars[idx].Move();
-	}
-	// Handle the Non-Player Characters
-	for( idx in npChars ){
-		
-		if( npChars[idx].actor.type == "civilian" ){
-			// Giving the beam a specialized hittest
-			if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
-				if(npChars[idx].GetStatus() != "stun"){
-					npChars[idx].SetStatus("stun");
-				}
-				npChars[idx].Levitate(5);
-			}
-			if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-95, npChars[idx].actor.sprite.y, 30)){
-				Abduct(idx);	
-			}else{
-				npCt++;
-			}
+	if( gameStatus != "over" ){
+		var npCt = 0;
+		// Handle the Player Characters
+		for( idx in pChars ){
+			pChars[idx].Move();
 		}
-		npChars[idx].Move();
+		// Handle the Non-Player Characters
+		for( idx in npChars ){
+			
+			if( npChars[idx].actor.type == "civilian" ){
+				// Giving the beam a specialized hittest
+				if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
+					if(npChars[idx].GetStatus() != "stun"){
+						npChars[idx].SetStatus("stun");
+					}
+					npChars[idx].Levitate(5);
+					EnergyUpdate(-.05);
+				}
+				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-95, npChars[idx].actor.sprite.y, 30)){
+					Abduct(idx);	
+				}else{
+					npCt++;
+				}
+			}
+			npChars[idx].Move();
+		}
+		if( npCt < presets.maxActor ){
+			Respawn();
+		}
+		EnergyUpdate(-.01);
+		// Redraw canvas
+		stage.update();
 	}
-	if( npCt < presets.maxActor ){
-		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
-		npChars.splice(0,0,new Civilian("civilian", tmpPos, screen_height-presets.ground));
-		stage.addChild(npChars[0].actor.sprite);
+}
+
+function EnergyUpdate(pVal){
+	tallyMon.energy += pVal;
+	if(tallyMon.energy < 1) tallyMon.energy = 0;
+	$('#energy span').html(Math.floor(tallyMon.energy)+"%");
+	if( tallyMon.energy <= 0 ){
+		EndGame();
 	}
-	// Redraw canvas
-	stage.update();
+}
+
+function EndGame(){
+	gameStatus = "over";
+	DebugOut("Game Over");
+	$('#endgame #score span').html(tallyMon.score);
+	$('#endgame').show();
+}
+
+function Respawn(){
+	var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
+	npChars.splice(0,0,new Civilian("civilian", tmpPos, screen_height-presets.ground));
+	stage.addChild(npChars[0].actor.sprite);
 }
 
 function Abduct(pIdx){
@@ -159,6 +186,7 @@ function Abduct(pIdx){
 		stage.removeChild(npChars[pIdx].actor.sprite);
 		npChars.splice(pIdx,1);
 		tallyMon.abducted++;
+		tallyMon.score += presets.abductVal;
 		DebugOut(tallyMon.abducted);
 		$('#abducted span').html(tallyMon.abducted);
 	}
