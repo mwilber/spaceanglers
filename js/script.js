@@ -53,12 +53,17 @@ $(document).ready(function(){
 	createjs.Ticker.setFPS(30);
 	createjs.Ticker.addListener(window);
 	
-	for( idx=0; idx<presets.maxActor; idx++ ){
+	for( idx=0; idx<(presets.maxActor); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		npChars.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground));
 		DebugOut("civ added: "+npChars.length);
 		stage.addChild(npChars[npChars.length-1].actor.sprite);	
 	}
+	
+	var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
+	var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/4);
+	npChars.push(new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos));
+	stage.addChild(npChars[npChars.length-1].actor.sprite);
 	
 	pChars.push(new Beam("p1_beam"));
 	stage.addChild(pChars[pChars.length-1].actor.sprite);
@@ -140,7 +145,7 @@ function tick(){
 					EnergyUpdate(-.05);
 				}
 				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-95, npChars[idx].actor.sprite.y, 30)){
-					Abduct(idx);	
+					Abduct(idx);
 				}
 				npChars[idx].Move();
 			}else{

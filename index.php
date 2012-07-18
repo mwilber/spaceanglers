@@ -93,6 +93,7 @@
 <script src="js/cShip.js"></script>
 <script src="js/cMonster.js"></script>
 <script src="js/cCivilian.js"></script>
+<script src="js/cMilitary.js"></script>
 <script src="js/cBeam.js"></script>
 
 <script type="text/javascript" src="js/libs/jquery.facebook.multifriend.select.js"></script>
