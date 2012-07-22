@@ -1,4 +1,4 @@
-function Ship(pName) {
+function Ship(pName, pImg) {
 	
 	this.status = "ready";
 	
@@ -11,7 +11,7 @@ function Ship(pName) {
 			{
 				"spin": [0, 5, "spin"]
 			},
-			"images": ["assets/anim_ship_spin.png"],
+			"images": [pImg],
 			"frames":
 			{
 				"regX": 0,

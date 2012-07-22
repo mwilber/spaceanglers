@@ -1,9 +1,9 @@
-function Civilian(pName, pStartX, pStartY) {
+function Civilian(pName, pStartX, pStartY, pImg) {
 	
 	this.actor = new Actor({
 		"name":pName,
 		"type":"civilian",
-		"startkey":"walk",
+		"startkey":"walk_h",
 		"status":"walk",
 		"spritesheet":{
 			"animations":
@@ -12,7 +12,7 @@ function Civilian(pName, pStartX, pStartY) {
 				"stun": [11, 19, "stun"],
 				"splat": [10, 10, "splat"]
 			},
-			"images": ["assets/anim_monster_comp.png"],
+			"images": [pImg],
 			"frames":
 			{
 				"regX": 32,
@@ -38,10 +38,13 @@ Civilian.prototype.Move = function() {
 
 	switch(this.actor.status){
 		case "walk":
-			if ( (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
+			if ( (Math.floor(Math.random()*50) == 0) || (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
 				this.actor.velocity.x = -this.actor.velocity.x;
-			}else if( Math.floor(Math.random()*50) == 0 ){
-				this.actor.velocity.x = -this.actor.velocity.x;
+				if(this.actor.velocity.x > 0){
+					this.actor.sprite.gotoAndPlay("walk_h");
+				}else{
+					this.actor.sprite.gotoAndPlay("walk");
+				}
 			}
 			break;
 		case "stun":
@@ -62,7 +65,7 @@ Civilian.prototype.Move = function() {
 			this.actor.sprite.gotoAndPlay("splat");
 		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
 			this.actor.status = "walk";
-			this.actor.sprite.gotoAndPlay("walk");
+			this.actor.sprite.gotoAndPlay("walk_h");
 			this.actor.velocity.y = 0;
 			this.actor.velocity.x = 4;
 			this.actor.sprite.y = screen_height-presets.ground;

@@ -1,9 +1,9 @@
-function Military(pName, pStartX, pStartY, pEndX) {
+function Military(pName, pStartX, pStartY, pEndX, pImg) {
 	
 	this.actor = new Actor({
 		"name":pName,
 		"type":"military",
-		"startkey":"walk",
+		"startkey":"walk_h",
 		"status":"walk",
 		"spritesheet":{
 			"animations":
@@ -12,7 +12,7 @@ function Military(pName, pStartX, pStartY, pEndX) {
 				"stun": [11, 19, "stun"],
 				"splat": [10, 10, "splat"]
 			},
-			"images": ["assets/anim_military_comp.png"],
+			"images": [pImg],
 			"frames":
 			{
 				"regX": 32,
@@ -34,6 +34,7 @@ function Military(pName, pStartX, pStartY, pEndX) {
 	});
 	
 	this.endX = pEndX;
+	this.dmgBullet = 1;
 }
 
 Military.prototype.Move = function() {
@@ -73,7 +74,7 @@ Military.prototype.Move = function() {
 			this.actor.sprite.gotoAndPlay("splat");
 		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
 			this.actor.status = "walk";
-			this.actor.sprite.gotoAndPlay("walk");
+			this.actor.sprite.gotoAndPlay("walk_h");
 			this.actor.velocity.y = 0;
 			this.actor.velocity.x = 4;
 			this.actor.sprite.y = screen_height-presets.ground;

@@ -2,7 +2,9 @@ function Actor(pData){
 	this.name = pData.name;
 	this.type = pData.type;
 	this.status = pData.status;
-	this.sprite = new createjs.BitmapAnimation(new createjs.SpriteSheet(pData.spritesheet));
+	this.ss = new createjs.SpriteSheet(pData.spritesheet);
+	SpriteSheetUtils.addFlippedFrames(this.ss, true, false, false);
+	this.sprite = new createjs.BitmapAnimation(this.ss);
 	this.sprite.x = pData.position.x;
 	this.sprite.y = pData.position.y;
 	this.sprite.gotoAndPlay(pData.startkey);
