@@ -9,18 +9,12 @@ function Civilian(pName, pStartX, pStartY, pImg) {
 			"animations":
 			{
 				"walk": [0, 9, "walk"],
-				"stun": [11, 19, "stun"],
-				"splat": [10, 10, "splat"]
+				"stun": [10, 15, "stun"],
+				"splat": [16, 16, "splat"]
 			},
 			"images": [pImg],
 			"frames":
-			{
-				"regX": 32,
-				"regY": 32,
-				"height": 64,
-				"width":64,
-				"count": 20
-			}
+			{"regX": 0, "width": 44, "count": 17, "regY": 0, "height": 58}
 		},
 		"position":{
 			"x":pStartX,

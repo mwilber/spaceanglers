@@ -9,18 +9,14 @@ function Military(pName, pStartX, pStartY, pEndX, pImg) {
 			"animations":
 			{
 				"walk": [0, 9, "walk"],
-				"stun": [11, 19, "stun"],
-				"splat": [10, 10, "splat"]
+				"stun": [10, 15, "stun"],
+				"splat": [16, 16, "splat"],
+				"aim": [17, 17, "aim"],
+				"fire": [17, 21, "aim"]
 			},
 			"images": [pImg],
 			"frames":
-			{
-				"regX": 32,
-				"regY": 32,
-				"height": 64,
-				"width":64,
-				"count": 20
-			}
+			{"regX": 0, "width": 49, "count": 22, "regY": 0, "height": 61}
 		},
 		"position":{
 			"x":pStartX,
@@ -43,6 +39,7 @@ Military.prototype.Move = function() {
 		case "walk":
 			if( this.actor.GetPos().x >= this.endX ){
 				this.actor.status = "fire";
+				this.actor.sprite.gotoAndPlay("aim");
 				this.actor.velocity.x = 0;
 			}else if( this.actor.GetPos().x < this.endX ){
 				this.actor.velocity.x = 4;

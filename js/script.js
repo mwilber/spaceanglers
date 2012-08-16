@@ -23,14 +23,14 @@ var presets = {
 	margin: 100,
 	g: 0.2,			// Gravity
 	beampwr: 5,		// speed beam lifts actors
-	ground: 50,		// y distance from bottom actors are spawned
+	ground: 70,		// y distance from bottom actors are spawned
 	ceiling: 150,	// min height ship can reach
 	lastlevel: 3, 	// # represents array idx
 	dmgDrain: 0.05,
 	dmgShell: 10,
 	maxActor: 5,
 	abductVal: 100,
-	fps: 30,
+	fps: 24,
 	freqBullet: 20,
 	drainCiv: 0.05
 };
@@ -57,11 +57,11 @@ $(document).ready(function(){
 	images['civilian'] = new Image();
 	images['civilian'].onload = HandleImageLoad;
 	images['civilian'].onerror = HandleImageError;
-	images['civilian'].src = "assets/anim_monster_comp.png";
+	images['civilian'].src = "assets/civilian.png";
 	images['military'] = new Image();
 	images['military'].onload = HandleImageLoad;
 	images['military'].onerror = HandleImageError;
-	images['military'].src = "assets/anim_military_comp.png";
+	images['military'].src = "assets/military.png";
 	
 	screen_width = document.getElementById("gamecanvas").width;
 	screen_height = document.getElementById("gamecanvas").height;
@@ -181,6 +181,7 @@ function tick(){
 					
 					bulletz.push(new Bullet(npChars[idx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, npChars[idx].dmgBullet));
 					stage.addChild(bulletz[bulletz.length-1].actor.sprite);
+					npChars[idx].actor.sprite.gotoAndPlay("fire");
 				}
 			}
 			if( npChars[idx].actor.status != "splat" ){
