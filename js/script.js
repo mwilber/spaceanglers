@@ -5,7 +5,6 @@
 var images = new Array();
 var numberOfImagesLoaded = 0;
 
-
 var canvas;
 var stage;
 var screen_width;
@@ -69,6 +68,7 @@ $(document).ready(function(){
 	
 	// create a new stage and point it at our canvas:
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
+	stage.clear();
 	
 	createjs.Ticker.setFPS(presets.fps);
 	createjs.Ticker.addListener(window);
@@ -128,10 +128,10 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 function HandleImageLoad(e) {
     numberOfImagesLoaded++;
     
-    DebugOut(numberOfImagesLoaded+" images loaded of "+images.length+1);
+    DebugOut(numberOfImagesLoaded+" images loaded of "+(GetObjectPropertyCount(images)));
     DebugOut(e);
 
-    if (numberOfImagesLoaded == images.length+1) {
+    if (numberOfImagesLoaded == (GetObjectPropertyCount(images))) {
 		numberOfImagesLoaded = 0;
         StartGame();
 	}
@@ -142,10 +142,12 @@ function HandleImageError(e) {
 }
 
 function StartGame(){
+	
+	DebugOut("-- START GAME --")
 	for( idx=0; idx<(presets.maxActor); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		npChars.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
-		DebugOut("civ added: "+npChars.length+" of "+presets.maxActor);
+		DebugOut("civ added: "+npChars.length+" of "+presets.maxActor+" ("+idx+")");
 		stage.addChild(npChars[npChars.length-1].actor.sprite);	
 	}
 	
@@ -274,6 +276,14 @@ function Disarm(pIdx){
 /////////////////////////////////////////////////////////////////////////////
 //	Utility Functions
 /////////////////////////////////////////////////////////////////////////////
+
+function GetObjectPropertyCount(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
 
 function findPos(obj) {
     var curleft = 0, curtop = 0;
