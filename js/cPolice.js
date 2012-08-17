@@ -1,8 +1,8 @@
-function Military(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
+function Police(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 	
 	this.actor = new Actor({
 		"name":pName,
-		"type":"military",
+		"type":"police",
 		"startkey":pStartKey,
 		"status":"walk",
 		"spritesheet":{
@@ -11,12 +11,12 @@ function Military(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 				"walk": [0, 9, "walk"],
 				"stun": [10, 15, "stun"],
 				"splat": [16, 16, "splat"],
-				"aim": [17, 17, "aim"], /* hard coded reference to this number in Move function */
+				"aim": [17, 17, "aim"],
 				"fire": [17, 21, "aim"]
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 0, "width": 49, "count": 22, "regY": 0, "height": 61}
+			{"regX": 0, "width": 44, "count": 22, "regY": 0, "height": 60}
 		},
 		"position":{
 			"x":pStartX,
@@ -35,7 +35,7 @@ function Military(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 	this.pause = 0;
 }
 
-Military.prototype.Move = function() {
+Police.prototype.Move = function() {
 
 	switch(this.actor.status){
 		case "walk":
@@ -49,6 +49,11 @@ Military.prototype.Move = function() {
 			else if( this.actor.GetPos().x > this.endX ){
 				this.actor.velocity.x = -4;
 			}
+			//if ( (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
+			//	this.actor.velocity.x = -this.actor.velocity.x;
+			//}else if( Math.floor(Math.random()*50) == 0 ){
+			//	this.actor.velocity.x = -this.actor.velocity.x;
+			//}
 			break;
 		case "fire":
 			if( this.pause == 0 ){
@@ -90,20 +95,20 @@ Military.prototype.Move = function() {
 	
 }
 
-Military.prototype.SetStatus = function(pStatus) {
+Police.prototype.SetStatus = function(pStatus) {
 	
 	this.actor.status = pStatus;
 	this.actor.sprite.gotoAndPlay(pStatus);
 	
 }
 
-Military.prototype.GetStatus = function() {
+Police.prototype.GetStatus = function() {
 	
 	return this.actor.status;
 	
 }
 
-Military.prototype.Levitate = function(pAmt){
+Police.prototype.Levitate = function(pAmt){
 	
 	this.actor.velocity.y = -pAmt;
 	this.actor.sprite.x = pChars[shipIdx].actor.sprite.x-20;

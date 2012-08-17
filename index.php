@@ -93,6 +93,7 @@
 <script src="js/cShip.js"></script>
 <script src="js/cMonster.js"></script>
 <script src="js/cCivilian.js"></script>
+<script src="js/cPolice.js"></script>
 <script src="js/cMilitary.js"></script>
 <script src="js/cBullet.js"></script>
 <script src="js/cBeam.js"></script>

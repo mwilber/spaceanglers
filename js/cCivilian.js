@@ -86,6 +86,6 @@ Civilian.prototype.GetStatus = function() {
 Civilian.prototype.Levitate = function(pAmt){
 	
 	this.actor.velocity.y = -pAmt;
-	this.actor.sprite.x = mousePos.x;
+	this.actor.sprite.x = pChars[shipIdx].actor.sprite.x-20;
 	
 }

@@ -27,7 +27,8 @@ var presets = {
 	lastlevel: 3, 	// # represents array idx
 	dmgDrain: 0.05,
 	dmgShell: 10,
-	maxActor: 5,
+	maxCiv: 2,
+	maxMil: 2,
 	abductVal: 100,
 	fps: 24,
 	freqBullet: 20,
@@ -61,6 +62,10 @@ $(document).ready(function(){
 	images['military'].onload = HandleImageLoad;
 	images['military'].onerror = HandleImageError;
 	images['military'].src = "assets/military.png";
+	images['police'] = new Image();
+	images['police'].onload = HandleImageLoad;
+	images['police'].onerror = HandleImageError;
+	images['police'].src = "assets/police.png";
 	
 	screen_width = document.getElementById("gamecanvas").width;
 	screen_height = document.getElementById("gamecanvas").height;
@@ -68,10 +73,11 @@ $(document).ready(function(){
 	
 	// create a new stage and point it at our canvas:
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
-	stage.clear();
 	
 	createjs.Ticker.setFPS(presets.fps);
 	createjs.Ticker.addListener(window);
+	
+	//StartGame();
 
 });
 
@@ -144,17 +150,39 @@ function HandleImageError(e) {
 function StartGame(){
 	
 	DebugOut("-- START GAME --")
-	for( idx=0; idx<(presets.maxActor); idx++ ){
+	for( idx=0; idx<(presets.maxCiv); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		npChars.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
-		DebugOut("civ added: "+npChars.length+" of "+presets.maxActor+" ("+idx+")");
+		DebugOut("civ added: "+npChars.length+" of "+presets.maxCiv+" ("+idx+")");
 		stage.addChild(npChars[npChars.length-1].actor.sprite);	
 	}
 	
-	var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
-	var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/4);
-	npChars.push(new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['military']));
-	stage.addChild(npChars[npChars.length-1].actor.sprite);
+	
+	for( idx=0; idx<(presets.maxMil); idx++ ){
+		var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
+		var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/4)+(10*idx);
+		var tmpStartKey = "walk_h";
+		if( Math.random()*10 > 5 ){
+			tmpStartPos = screen_width+(-tmpStartPos);
+			tmpEndPos = screen_width-tmpEndPos;
+			tmpStartKey = "walk";
+		}
+		npChars.push(new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['military'], tmpStartKey));
+		stage.addChild(npChars[npChars.length-1].actor.sprite);
+	}
+	
+	for( idx=0; idx<(presets.maxMil); idx++ ){
+		var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
+		var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/8)+(10*idx);
+		var tmpStartKey = "walk_h";
+		if( Math.random()*10 > 5 ){
+			tmpStartPos = screen_width+(-tmpStartPos);
+			tmpEndPos = screen_width-tmpEndPos;
+			tmpStartKey = "walk";
+		}
+		npChars.push(new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
+		stage.addChild(npChars[npChars.length-1].actor.sprite);
+	}
 	
 	pChars.push(new Beam("p1_beam"));
 	stage.addChild(pChars[pChars.length-1].actor.sprite);
@@ -174,7 +202,9 @@ function tick(){
 			pChars[idx].Move();
 		}
 		// Handle the Non-Player Characters
+		var resetBeam = true;
 		for( idx in npChars ){
+			
 			if( npChars[idx].actor.status == "fire" ){
 				if( Math.floor(Math.random()*1000) < presets.freqBullet ){
 					var vX = (pChars[shipIdx].actor.sprite.x+(pChars[shipIdx].actor.width/2)) - npChars[idx].actor.GetPos().x;
@@ -183,25 +213,38 @@ function tick(){
 					
 					bulletz.push(new Bullet(npChars[idx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, npChars[idx].dmgBullet));
 					stage.addChild(bulletz[bulletz.length-1].actor.sprite);
-					npChars[idx].actor.sprite.gotoAndPlay("fire");
+					if(npChars[idx].actor.GetPos().x < pChars[shipIdx].actor.sprite.x){
+						npChars[idx].actor.sprite.gotoAndPlay("fire_h");	
+					}else{
+						npChars[idx].actor.sprite.gotoAndPlay("fire");	
+					}
+					//npChars[idx].actor.sprite.gotoAndPlay("fire");
+					npChars[idx].pause = 5;
 				}
 			}
 			if( npChars[idx].actor.status != "splat" ){
 				// Giving the beam a specialized hittest
-				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x-(pChars[shipIdx].actor.width/2), npChars[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
+				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x, npChars[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
 					Abduct(idx);
 				}else if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
-					if(npChars[idx].GetStatus() != "stun"){
-						npChars[idx].SetStatus("stun");
+					if( pChars[beamIdx].charIdx < 0 || pChars[beamIdx].charIdx == idx ){
+						resetBeam = false;
+						pChars[beamIdx].charIdx = idx;
+						if(npChars[idx].GetStatus() != "stun"){
+							npChars[idx].SetStatus("stun");
+						}
+						npChars[idx].Levitate(presets.beampwr);
+						EnergyUpdate(-presets.drainCiv);
 					}
-					npChars[idx].Levitate(presets.beampwr);
-					EnergyUpdate(-presets.drainCiv);
 				}
 				
 				npChars[idx].Move();
 			}else{
 				Decay(idx);
 			}
+		}
+		if( resetBeam ){
+			pChars[beamIdx].charIdx = -1;
 		}
 		// Handle de bulletz
 		for( idx in bulletz ){
@@ -213,7 +256,7 @@ function tick(){
 				Disarm(idx);
 			}
 		}
-		if( npChars.length < presets.maxActor ){
+		if( npChars.length < presets.maxCiv ){
 			Respawn();
 		}
 		EnergyUpdate(-presets.dmgDrain);

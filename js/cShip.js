@@ -14,8 +14,8 @@ function Ship(pName, pImg) {
 			"images": [pImg],
 			"frames":
 			{
-				"regX": 0,
-				"regY": 20,
+				"regX": 100,
+				"regY": 31,
 				"height": 63,
 				"width":191.8333,
 				"count": 6
@@ -29,7 +29,7 @@ function Ship(pName, pImg) {
 			"x":0,
 			"y":0
 		},
-		"radius":30
+		"radius":20
 	});
 }
 
@@ -39,6 +39,15 @@ Ship.prototype.Move = function() {
     if(mousePos.y > screen_height-presets.ceiling){
     	mousePos.y = screen_height-presets.ceiling;
     }
+    
+    distX = ((mousePos.x-(this.actor.width/2))-this.actor.GetPos().x);
+    
+    this.actor.sprite.rotation = distX*.1;
+    
+    newX = this.actor.GetPos().x+( distX*0.2 );
+    newY = this.actor.GetPos().y+( ((mousePos.y-(this.actor.height/2))-this.actor.GetPos().y)*0.2 );
 	
-	this.actor.SetPos({'x':mousePos.x-(this.actor.width/2), 'y':mousePos.y-(this.actor.height/2)});
+	this.actor.SetPos({'x':newX, 'y':newY});
+	
+	pChars[beamIdx].Move();
 }
