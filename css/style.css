@@ -215,6 +215,12 @@ table { border-collapse: collapse; border-spacing: 0; }
 	background-color:#002070;
 }
 
+#firebutton{
+	width:200px;
+	height:200px;
+	background-color:#f00;
+}
+
 #endgame{
 	display:none;
 	position:absolute;

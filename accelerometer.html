@@ -3,12 +3,20 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
         <script>
         
-            var doMove = windowDeviceMotionEvent;
-		    if (doMove){
-		        alert("I do shake it!");
-		    }
-        
             $('document').ready(function(){
+            	
+            	/*window.ondevicemotion = function(event) {  
+				    var accelerationX = event.accelerationIncludingGravity.x;  
+				    var accelerationY = event.accelerationIncludingGravity.y;  
+				    var accelerationZ = event.accelerationIncludingGravity.z;  
+				    
+				    $("body").html(
+                        "x = <b>" + accelerationX + "</b><br/>" +
+                        "y = <b>" + accelerationY + "</b><br/>" +
+                        "z = <b>" + accelerationZ + "</b>"
+                    );
+				}*/
+
  
                 $(window).bind("devicemotion", function(e){
                     var movitBaby = e.originalEvent,
@@ -27,5 +35,6 @@
         </script>
     </head>
     <body>
+    	nothing
     </body>
 </html>

@@ -29,7 +29,7 @@ function Ship(pName, pImg) {
 			"x":0,
 			"y":0
 		},
-		"radius":20
+		"radius":25
 	});
 }
 
@@ -40,7 +40,7 @@ Ship.prototype.Move = function() {
     	mousePos.y = screen_height-presets.ceiling;
     }
     
-    distX = ((mousePos.x-(this.actor.width/2))-this.actor.GetPos().x);
+    distX = ((mousePos.x)-this.actor.GetPos().x);
     
     this.actor.sprite.rotation = distX*.1;
     

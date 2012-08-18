@@ -22,7 +22,7 @@
 	<meta property="fb:admins" content="631337813" />
 	<meta property="og:description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api." />
 
-	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="viewport" content="width=1000">
 
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
@@ -68,6 +68,7 @@
 	</div>
 	<div id="main" role="main">
 		<canvas id="gamecanvas" width="800" height="500"></canvas>
+		<div id="firebutton"></div>
 	</div>
 	<div id="fb-root"></div>
 	<div id="jfmfs-dialog">

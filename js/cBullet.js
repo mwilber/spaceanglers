@@ -6,7 +6,7 @@ function Bullet(pStartPos, pVector, pDamage) {
 	this.damage = pDamage;
 	
 	var g = new Graphics()
-		.beginStroke("#FFFFFF").moveTo(-1, 0).lineTo(1, 0)
+		.beginFill("#FFFFFF").drawCircle(0, 0, this.damage*0.5)
 		.endStroke();
 	this.actor.sprite = new Shape(g);
 	this.actor.sprite.visible = true;

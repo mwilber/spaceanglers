@@ -31,7 +31,7 @@ function Military(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 	
 	this.startX = pStartX;
 	this.endX = pEndX;
-	this.dmgBullet = 1;
+	this.dmgBullet = 10;
 	this.pause = 0;
 }
 

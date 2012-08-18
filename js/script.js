@@ -14,7 +14,9 @@ var mousePos = {
 	"y":0
 }
 var pChars = new Array();
-var npChars = new Array();
+var npCharsCiv = new Array();
+var npCharsPol = new Array();
+var npCharsMil = new Array();
 var bulletz = new Array();
 var beamIdx = -1;
 var shipIdx = -1;
@@ -27,12 +29,18 @@ var presets = {
 	lastlevel: 3, 	// # represents array idx
 	dmgDrain: 0.05,
 	dmgShell: 10,
-	maxCiv: 2,
-	maxMil: 2,
+	maxCiv: 4,
+	srCiv:60,
+	maxMil: 0,
+	srMil: 60,
+	maxPol: 0,
+	srPol: 30,
 	abductVal: 100,
 	fps: 24,
 	freqBullet: 20,
-	drainCiv: 0.05
+	drainCiv: 0.05,
+	accelerometerSensitivity:10,
+	accelerometerYOffset:7
 };
 var tallyMon = {
 	"abducted": 0,
@@ -69,6 +77,9 @@ $(document).ready(function(){
 	
 	screen_width = document.getElementById("gamecanvas").width;
 	screen_height = document.getElementById("gamecanvas").height;
+	
+	mousePos.x = screen_width/2;
+	mousePos.y = screen_height/2;
 
 	
 	// create a new stage and point it at our canvas:
@@ -79,6 +90,38 @@ $(document).ready(function(){
 	
 	//StartGame();
 
+});
+
+$(window).bind("devicemotion", function(e){
+	var movitBaby = e.originalEvent,
+		acelera = movitBaby.accelerationIncludingGravity,
+		x = acelera.x,
+		y = acelera.y,
+		z = acelera.z;
+		
+	
+	if( mousePos.x < 0 ){
+		mousePos.x = 0;
+	}else if( mousePos.x > screen_width ){
+		mousePos.x = screen_width;
+	}else{
+		mousePos.x += Math.floor(x)*presets.accelerometerSensitivity;
+	}
+	if( mousePos.y < 0 ){
+		mousePos.y = 0;
+	}else if( mousePos.y > screen_height ){
+		mousePos.y = screen_height;
+	}else{
+		mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
+	}
+});
+
+$("#firebutton").bind('touchstart', function(){
+	pChars[beamIdx].On();
+	return false;
+}).bind('touchend', function(){
+	pChars[beamIdx].Off();
+	return false;
 });
 
 $('#gamecanvas').mousemove(function(e) {
@@ -152,9 +195,9 @@ function StartGame(){
 	DebugOut("-- START GAME --")
 	for( idx=0; idx<(presets.maxCiv); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
-		npChars.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
-		DebugOut("civ added: "+npChars.length+" of "+presets.maxCiv+" ("+idx+")");
-		stage.addChild(npChars[npChars.length-1].actor.sprite);	
+		npCharsCiv.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
+		DebugOut("civ added: "+npCharsCiv.length+" of "+presets.maxCiv+" ("+idx+")");
+		stage.addChild(npCharsCiv[npCharsCiv.length-1].actor.sprite);	
 	}
 	
 	
@@ -167,11 +210,11 @@ function StartGame(){
 			tmpEndPos = screen_width-tmpEndPos;
 			tmpStartKey = "walk";
 		}
-		npChars.push(new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['military'], tmpStartKey));
-		stage.addChild(npChars[npChars.length-1].actor.sprite);
+		npCharsMil.push(new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['military'], tmpStartKey));
+		stage.addChild(npCharsMil[npCharsMil.length-1].actor.sprite);
 	}
 	
-	for( idx=0; idx<(presets.maxMil); idx++ ){
+	for( idx=0; idx<(presets.maxPol); idx++ ){
 		var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
 		var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/8)+(10*idx);
 		var tmpStartKey = "walk_h";
@@ -180,8 +223,8 @@ function StartGame(){
 			tmpEndPos = screen_width-tmpEndPos;
 			tmpStartKey = "walk";
 		}
-		npChars.push(new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
-		stage.addChild(npChars[npChars.length-1].actor.sprite);
+		npCharsPol.push(new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
+		stage.addChild(npCharsPol[npCharsPol.length-1].actor.sprite);
 	}
 	
 	pChars.push(new Beam("p1_beam"));
@@ -197,56 +240,34 @@ function StartGame(){
 
 function tick(){
 	if( gameStatus != "over" ){
+		
+		///////////////////////////
 		// Handle the Player Characters
+		///////////////////////////
 		for( idx in pChars ){
 			pChars[idx].Move();
 		}
+		
+		///////////////////////////
 		// Handle the Non-Player Characters
-		var resetBeam = true;
-		for( idx in npChars ){
-			
-			if( npChars[idx].actor.status == "fire" ){
-				if( Math.floor(Math.random()*1000) < presets.freqBullet ){
-					var vX = (pChars[shipIdx].actor.sprite.x+(pChars[shipIdx].actor.width/2)) - npChars[idx].actor.GetPos().x;
-					var vY = (pChars[shipIdx].actor.sprite.y+(pChars[shipIdx].actor.height/2)) - npChars[idx].actor.GetPos().y;
-					var vS = vX/vY;
-					
-					bulletz.push(new Bullet(npChars[idx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, npChars[idx].dmgBullet));
-					stage.addChild(bulletz[bulletz.length-1].actor.sprite);
-					if(npChars[idx].actor.GetPos().x < pChars[shipIdx].actor.sprite.x){
-						npChars[idx].actor.sprite.gotoAndPlay("fire_h");	
-					}else{
-						npChars[idx].actor.sprite.gotoAndPlay("fire");	
-					}
-					//npChars[idx].actor.sprite.gotoAndPlay("fire");
-					npChars[idx].pause = 5;
-				}
-			}
-			if( npChars[idx].actor.status != "splat" ){
-				// Giving the beam a specialized hittest
-				if(pChars[shipIdx].actor.hitRadius(npChars[idx].actor.sprite.x, npChars[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
-					Abduct(idx);
-				}else if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(npChars[idx].actor.GetPos())){
-					if( pChars[beamIdx].charIdx < 0 || pChars[beamIdx].charIdx == idx ){
-						resetBeam = false;
-						pChars[beamIdx].charIdx = idx;
-						if(npChars[idx].GetStatus() != "stun"){
-							npChars[idx].SetStatus("stun");
-						}
-						npChars[idx].Levitate(presets.beampwr);
-						EnergyUpdate(-presets.drainCiv);
-					}
-				}
-				
-				npChars[idx].Move();
-			}else{
-				Decay(idx);
-			}
+		///////////////////////////
+		var doBeamReset = true;
+		for( idx in npCharsCiv ){
+			if( !HandleNPChars(npCharsCiv, idx) ) doBeamReset=false;
 		}
-		if( resetBeam ){
+		for( idx in npCharsMil ){
+			if( !HandleNPChars(npCharsMil, idx) ) doBeamReset=false;
+		}
+		for( idx in npCharsPol ){
+			if( !HandleNPChars(npCharsPol, idx) ) doBeamReset=false;
+		}
+		if( doBeamReset ){
 			pChars[beamIdx].charIdx = -1;
 		}
+		
+		///////////////////////////
 		// Handle de bulletz
+		///////////////////////////
 		for( idx in bulletz ){
 			bulletz[idx].Move();
 			if(bulletz[idx].actor.sprite.y < 0 || bulletz[idx].actor.sprite.x < 0 || bulletz[idx].actor.sprite.x > screen_width){
@@ -256,13 +277,75 @@ function tick(){
 				Disarm(idx);
 			}
 		}
-		if( npChars.length < presets.maxCiv ){
-			Respawn();
+		
+		///////////////////////////
+		// Respawn
+		///////////////////////////
+		if( npCharsCiv.length < presets.maxCiv ){
+			Respawn(npCharsCiv, "civ");
+		}
+		if( npCharsPol.length < presets.maxPol ){
+			Respawn(npCharsPol, "pol");
+		}
+		if( npCharsMil.length < presets.maxMil ){
+			Respawn(npCharsMil, "mil");
 		}
 		EnergyUpdate(-presets.dmgDrain);
+		
+		///////////////////////////
 		// Redraw canvas
+		///////////////////////////
 		stage.update();
+		
+		///////////////////////////
+		// Add new NPCs
+		///////////////////////////
+		if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
+		if( createjs.Ticker.getTicks() == 150 || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
+		if( createjs.Ticker.getTicks() == 500 || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
 	}
+}
+
+function HandleNPChars(pArr, pIdx){
+	var resetBeam = true;
+	if( pArr[pIdx].actor.status == "fire" ){
+		if( Math.floor(Math.random()*1000) < presets.freqBullet ){
+			var vX = (pChars[shipIdx].actor.sprite.x+(pChars[shipIdx].actor.width/2)) - pArr[pIdx].actor.GetPos().x;
+			var vY = (pChars[shipIdx].actor.sprite.y+(pChars[shipIdx].actor.height/2)) - pArr[pIdx].actor.GetPos().y;
+			var vS = vX/vY;
+			
+			bulletz.push(new Bullet(pArr[pIdx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, pArr[pIdx].dmgBullet));
+			stage.addChild(bulletz[bulletz.length-1].actor.sprite);
+			if(pArr[pIdx].actor.GetPos().x < pChars[shipIdx].actor.sprite.x){
+				pArr[pIdx].actor.sprite.gotoAndPlay("fire_h");	
+			}else{
+				pArr[pIdx].actor.sprite.gotoAndPlay("fire");	
+			}
+			//pArr[pIdx].actor.sprite.gotoAndPlay("fire");
+			pArr[pIdx].pause = 5;
+		}
+	}
+	if( pArr[pIdx].actor.status != "splat" ){
+		// Giving the beam a specialized hittest
+		if(pChars[shipIdx].actor.hitRadius(pArr[pIdx].actor.sprite.x, pArr[pIdx].actor.sprite.y, pChars[shipIdx].actor.hit)){
+			Abduct(pArr, pIdx);
+		}else if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(pArr[pIdx].actor.GetPos())){
+			if( pChars[beamIdx].charIdx < 0 || pChars[beamIdx].charIdx == pIdx ){
+				resetBeam = false;
+				pChars[beamIdx].charIdx = pIdx;
+				if(pArr[pIdx].GetStatus() != "stun"){
+					pArr[pIdx].SetStatus("stun");
+				}
+				pArr[pIdx].Levitate(presets.beampwr);
+				EnergyUpdate(-presets.drainCiv);
+			}
+		}
+		
+		pArr[pIdx].Move();
+	}else{
+		Decay(pArr, pIdx);
+	}
+	return resetBeam;
 }
 
 function EnergyUpdate(pVal){
@@ -281,17 +364,48 @@ function EndGame(){
 	$('#endgame').show();
 }
 
-function Respawn(){
-	var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
-	npChars.splice(0,0,new Civilian("civilian", tmpPos, screen_height-presets.ground, images['civilian']));
-	stage.addChild(npChars[0].actor.sprite);
+function Respawn(pArr, pType){
+	switch(pType){
+		case "civ":
+			var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
+			npCharsCiv.splice(0,0,new Civilian("civilian", tmpPos, screen_height-presets.ground, images['civilian']));
+			stage.addChild(npCharsCiv[0].actor.sprite);	
+			break;
+		case "pol":
+			var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
+			var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/8)+(10*idx);
+			var tmpStartKey = "walk_h";
+			if( Math.random()*10 > 5 ){
+				tmpStartPos = screen_width+(-tmpStartPos);
+				tmpEndPos = screen_width-tmpEndPos;
+				tmpStartKey = "walk";
+			}
+			npCharsPol.splice(0,0,new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
+			stage.addChild(npCharsPol[0].actor.sprite);
+			break;
+		case "mil":
+			var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
+			var tmpEndPos = Math.floor(Math.random()*(screen_width/4))+(screen_width/4)+(10*idx);
+			var tmpStartKey = "walk_h";
+			if( Math.random()*10 > 5 ){
+				tmpStartPos = screen_width+(-tmpStartPos);
+				tmpEndPos = screen_width-tmpEndPos;
+				tmpStartKey = "walk";
+			}
+			npCharsMil.splice(0,0,new Military("military", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['military'], tmpStartKey));
+			stage.addChild(npCharsMil[0].actor.sprite);
+			break;
+	}
 }
 
-function Abduct(pIdx){
+function Abduct(pArr, pIdx){
 	// Don't accidentally abduct the wrong thing
-	if(npChars[pIdx].actor.type == "civilian"){
-		stage.removeChild(npChars[pIdx].actor.sprite);
-		npChars.splice(pIdx,1);
+	if(pArr[pIdx].actor.type == "civilian"){
+		//stage.removeChild(pArr[pIdx].actor.sprite);
+		//pArr.splice(pIdx,1);
+		pArr[pIdx].actor.status = "splat";
+		pArr[pIdx].actor.sprite.x = -100;
+		pArr[pIdx].actor.sprite.y = -100;
 		tallyMon.abducted++;
 		tallyMon.score += presets.abductVal;
 		DebugOut(tallyMon.abducted);
@@ -299,15 +413,15 @@ function Abduct(pIdx){
 	}
 }
 
-function Decay(pIdx){
+function Decay(pArr, pIdx){
 	// Don't accidentally decay the wrong thing
-	if(npChars[pIdx].actor.type == "civilian"){
-		npChars[pIdx].actor.decay-=.5;
-		if(npChars[pIdx].actor.decay <= 0){
-			stage.removeChild(npChars[pIdx].actor.sprite);
-			npChars.splice(pIdx,1);
+	//if(npChars[pIdx].actor.type == "civilian"){
+		pArr[pIdx].actor.decay-=.5;
+		if(pArr[pIdx].actor.decay <= 0){
+			stage.removeChild(pArr[pIdx].actor.sprite);
+			pArr.splice(pIdx,1);
 		}
-	}
+	//}
 }
 
 function Disarm(pIdx){
