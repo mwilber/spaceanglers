@@ -67,7 +67,9 @@
 		<div id="energy">Energy: <span>100%</span></div>
 	</div>
 	<div id="main" role="main">
-		<canvas id="gamecanvas" width="800" height="500"></canvas>
+		<div id="canvasbkg">
+			<canvas id="gamecanvas" width="800" height="500"></canvas>
+		</div>
 		<div id="firebutton"></div>
 	</div>
 	<div id="fb-root"></div>

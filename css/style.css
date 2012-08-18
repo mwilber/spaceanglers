@@ -210,9 +210,18 @@ table { border-collapse: collapse; border-spacing: 0; }
 	display:none;
 }
 
+#canvasbkg{
+	width:800px;
+	height:500px;
+	background-image:url('../assets/sky.png');
+}
+
 #gamecanvas{
 	cursor: none;
-	background-color:#002070;
+	/*background-color:#002070;*/
+	background-image:url('../assets/ground.png');
+	background-repeat:no-repeat;
+	background-position:bottom center;
 }
 
 #firebutton{
@@ -229,9 +238,9 @@ table { border-collapse: collapse; border-spacing: 0; }
 	height:300px;
 	width:600px;
 	padding:20px;
-	color:#fff;
+	color:#eee;
 	font-size:18px;
-	background-color:rgba(0,0,0,0.5);
+	background-color:rgba(255,255,255,0.2);
 	border-radius: 15px; 
 	-moz-border-radius: 15px; 
 	-webkit-border-radius: 15px; 
