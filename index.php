@@ -22,7 +22,7 @@
 	<meta property="fb:admins" content="631337813" />
 	<meta property="og:description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api." />
 
-	<meta name="viewport" content="width=1000">
+	<meta name="viewport" content="width=950">
 
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
