@@ -89,59 +89,67 @@ $(document).ready(function(){
 	createjs.Ticker.addListener(window);
 	
 	//StartGame();
-
-});
-
-$(window).bind("devicemotion", function(e){
-	var movitBaby = e.originalEvent,
-		acelera = movitBaby.accelerationIncludingGravity,
-		x = acelera.x,
-		y = acelera.y,
-		z = acelera.z;
-		
 	
-	if( mousePos.x < 0 ){
-		mousePos.x = 0;
-	}else if( mousePos.x > screen_width ){
-		mousePos.x = screen_width;
+	if(Modernizr.touch){
+		$('#firebutton').show();
 	}else{
-		mousePos.x += Math.floor(x)*presets.accelerometerSensitivity;
+		$('#firebutton').hide();
 	}
-	if( mousePos.y < 0 ){
-		mousePos.y = 0;
-	}else if( mousePos.y > screen_height ){
-		mousePos.y = screen_height;
-	}else{
-		mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
-	}
+
 });
 
-$("#firebutton").bind('touchstart', function(){
-	pChars[beamIdx].On();
-	return false;
-}).bind('touchend', function(){
-	pChars[beamIdx].Off();
-	return false;
-});
 
-$('#gamecanvas').mousemove(function(e) {
-    var pos = findPos(this);
-    mousePos.x = e.pageX - pos.x;
-    mousePos.y = e.pageY - pos.y;
-    //var coordinateDisplay = "x=" + x + ", y=" + y;
-    //writeCoordinateDisplay(coordinateDisplay);
-});
-
-$('#gamecanvas').mousedown(function(e) {
-    pChars[beamIdx].On();
-    return false;
-});
-
-$('#gamecanvas').mouseup(function(e) {
-    pChars[beamIdx].Off();
-    return false;
-});
-
+if(Modernizr.touch){
+	$(window).bind("devicemotion", function(e){
+		var movitBaby = e.originalEvent,
+			acelera = movitBaby.accelerationIncludingGravity,
+			x = acelera.x,
+			y = acelera.y,
+			z = acelera.z;
+			
+		
+		if( mousePos.x < 0 ){
+			mousePos.x = 0;
+		}else if( mousePos.x > screen_width ){
+			mousePos.x = screen_width;
+		}else{
+			mousePos.x += Math.floor(x)*presets.accelerometerSensitivity;
+		}
+		if( mousePos.y < 0 ){
+			mousePos.y = 0;
+		}else if( mousePos.y > screen_height ){
+			mousePos.y = screen_height;
+		}else{
+			mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
+		}
+	});
+	
+	$("#firebutton").bind('touchstart', function(){
+		pChars[beamIdx].On();
+		return false;
+	}).bind('touchend', function(){
+		pChars[beamIdx].Off();
+		return false;
+	});
+}else{
+	$('#gamecanvas').mousemove(function(e) {
+	    var pos = findPos(this);
+	    mousePos.x = e.pageX - pos.x;
+	    mousePos.y = e.pageY - pos.y;
+	    //var coordinateDisplay = "x=" + x + ", y=" + y;
+	    //writeCoordinateDisplay(coordinateDisplay);
+	});
+	
+	$('#gamecanvas').mousedown(function(e) {
+	    pChars[beamIdx].On();
+	    return false;
+	});
+	
+	$('#gamecanvas').mouseup(function(e) {
+	    pChars[beamIdx].Off();
+	    return false;
+	});
+}
 
 $('body').bind('AuthorizedUser', function(event, authObj) {
 	fb_auth.id = authObj.authResponse.userID;
