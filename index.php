@@ -17,7 +17,7 @@
 	<meta property="og:title" content="Space Anglers" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="http://spaceanglers.com/" />
-	<meta property="og:image" content="https://fask.herokuapp.com/images/fask.png" />
+	<meta property="og:image" content="https://fask.herokuapp.com/images/icon.png" />
 	<meta property="og:site_name" content="https://spaceanglers.com/" />
 	<meta property="fb:admins" content="631337813" />
 	<meta property="og:description" content="An HTML5 Canvas video game by GreenZeta. Coming - Halloween 2012" />
