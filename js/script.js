@@ -78,23 +78,15 @@ $(document).ready(function(){
 	screen_width = document.getElementById("gamecanvas").width;
 	screen_height = document.getElementById("gamecanvas").height;
 	
-	mousePos.x = screen_width/2;
-	mousePos.y = screen_height/2;
-
+	if(Modernizr.touch){
+		$('#firebuttonn').show();
+	}else{
+		$('#firebuttonn').hide();
+	}
 	
 	// create a new stage and point it at our canvas:
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
 	
-	createjs.Ticker.setFPS(presets.fps);
-	createjs.Ticker.addListener(window);
-	
-	//StartGame();
-	
-	if(Modernizr.touch){
-		$('#firebutton').show();
-	}else{
-		$('#firebutton').hide();
-	}
 
 });
 
@@ -124,7 +116,7 @@ if(Modernizr.touch){
 		}
 	});
 	
-	$("#firebutton").bind('touchstart', function(){
+	$("#firebuttonn").bind('touchstart', function(){
 		pChars[beamIdx].On();
 		return false;
 	}).bind('touchend', function(){
@@ -178,6 +170,45 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 	}
 });
 
+$('#btn_skip').click(function(){
+	$('.panel').hide();
+	InitGame();
+});
+
+$('#btn_start').click(function(){
+	$('.panel').hide();
+	$('#intro').show();
+});
+
+$('#btn_intro_start').click(function(){
+	$('.panel').hide();
+	InitGame();
+});
+
+$('#btn_highscore').click(function(){
+	$('.panel').hide();
+	$('#scorebox').show();
+	$('#scorebox #scores').load('reactor/score/topten');
+});
+
+$('#btn_home').click(function(){
+	$('#start').show();
+});
+
+$('#btn_restart').click(function(){
+	$('#start').show();
+});
+
+$('#btn_savescore').click(function(){
+	//tallyMon.score\
+	DebugOut(tallyMon);
+	DebugOut(tallyMon.score);
+	var scorename = $('#scorename').val();
+	$.post("reactor/score/add", { scoreName: scorename, scoreNumber: tallyMon.score }, function(data){
+		alert("Score Posted!");
+	} );
+});
+
 /////////////////////////////////////////////////////////////////////////////
 //	Game Functions
 /////////////////////////////////////////////////////////////////////////////
@@ -185,17 +216,45 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 function HandleImageLoad(e) {
     numberOfImagesLoaded++;
     
-    DebugOut(numberOfImagesLoaded+" images loaded of "+(GetObjectPropertyCount(images)));
+    DebugOut(numberOfImagesLoaded+" images loaded offff "+(GetObjectPropertyCount(images)));
     DebugOut(e);
 
     if (numberOfImagesLoaded == (GetObjectPropertyCount(images))) {
 		numberOfImagesLoaded = 0;
-        StartGame();
+        //StartGame();
+        //$('.panel').hide();
+		//InitGame();
+		$('#loading').hide();
 	}
 }
 
 function HandleImageError(e) {
     DebugOut('error on image load');
+}
+
+function InitGame(){
+	
+	mousePos = {
+		"x":0,
+		"y":0
+	}
+	pChars = new Array();
+	npCharsCiv = new Array();
+	npCharsPol = new Array();
+	npCharsMil = new Array();
+	bulletz = new Array();
+	beamIdx = -1;
+	shipIdx = -1;
+	
+	stage.clear();
+	
+	mousePos.x = screen_width/2;
+	mousePos.y = screen_height/2;
+	
+	createjs.Ticker.setFPS(presets.fps);
+	createjs.Ticker.addListener(window);
+	
+	StartGame();
 }
 
 function StartGame(){
@@ -311,6 +370,14 @@ function tick(){
 		if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
 		if( createjs.Ticker.getTicks() == 150 || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
 		if( createjs.Ticker.getTicks() == 500 || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
+	
+		///////////////////////////
+		// Update the energy bar
+		///////////////////////////
+		$('#energybar').css('width',(tallyMon.energy*3)+"px");
+		if( tallyMon.energy < 25 ){
+			if( createjs.Ticker.getTicks() % (presets.fps/2) == 0) $('#energybar').toggleClass('white');
+		}
 	}
 }
 

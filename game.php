@@ -11,19 +11,20 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Facebook App Starter Kit</title>
-	<meta name="description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api.">
+	<title>Space Anglers</title>
+	<meta name="description" content="An HTML5 Canvas video game by GreenZeta.">
 	<meta name="author" content="Matthew Wilber">
-	<meta property="og:title" content="Facebook App Starter Kit" />
+	<meta property="og:title" content="Space Anglers" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://apps.facebook.com/appstarterkit/" />
-	<meta property="og:image" content="https://fask.herokuapp.com/images/fask.png" />
-	<meta property="og:site_name" content="https://fask.herokuapp.com/" />
+	<meta property="og:url" content="http://spaceanglers.com/" />
+	<meta property="og:image" content="https://spaceanglers.com/images/fask.png" />
+	<meta property="og:site_name" content="https://spaceanglers.com/" />
 	<meta property="fb:admins" content="631337813" />
-	<meta property="og:description" content="FASK provides a ready made starting point for building facebook apps using the facebook javascript api." />
+	<meta property="og:description" content="An HTML5 Canvas video game by GreenZeta. Coming - Halloween 2012" />
 
-	<meta name="viewport" content="width=950">
+	<meta name="viewport" content="width=900">
 
+	<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
 	
@@ -59,18 +60,46 @@
 </head>
 <body>
 <div id="container">
+<div id="ground">
 	<header>
-		<h2>InsertTitleHere</h2>
+		<a href="http://www.greenzeta.com/" target="_blank"><img src="images/logo_header.png"/></a>
 	</header>
-	<div id="scoreboard">
-		<div id="abducted">Abducted: <span>0</span></div>
-		<div id="energy">Energy: <span>100%</span></div>
-	</div>
 	<div id="main" role="main">
 		<div id="canvasbkg">
-			<canvas id="gamecanvas" width="800" height="500"></canvas>
+			<div id="loading" class="panel" style="z-index:500;">
+				<h1>Loading...</h1>
+			</div>
+			<div id="start" class="panel" style="z-index:400;">
+				<ul>
+					<li><a id="btn_start" href="#" onclick="return false;">Start Game</a></li>
+					<li><a id="btn_skip" href="#" onclick="return false;">Skip Instructions</a></li>
+					<li><a id="btn_highscore" href="#" onclick="return false;">High Score</a></li>
+				</ul>
+			</div>
+			<div id="intro" class="panel" style="z-index:300;">
+				Intro Comic Here
+				<a id="btn_intro_start" href="#" onclick="return false;">Start Game</a>
+			</div>
+			<div id="scorebox" class="panel" style="z-index:200;">
+				<a id="btn_home" href="#" onclick="return false;">Back</a>
+				<div id="scores"></div>
+			</div>
+			<div id="endgame" class="panel" style="z-index:150;">
+				<h2>Game Over</h2>
+				<div id="score">Final Score: <span>0</span></div>
+				Name:<input type="text" id="scorename" value="Name"/>
+				<a id="btn_savescore" href="#" onclick="return false;">Save Score</a>
+				<a id="btn_restart" href="#" onclick="return false;">Restart</a>
+			</div>
+			<div id="hud" style="z-index: 110;">
+				<div id="abducted">Abducted: <span>0</span></div>
+				<div id="energybarframe">
+					<div id="energybar"><div id="energy">Energy: <span>100%</span></div></div>
+				</div>
+			</div>
+			<canvas id="gamecanvas" width="800" height="500" style="z-index:100;">
+			</canvas>
 		</div>
-		<div id="firebutton"></div>
 	</div>
 	<div id="fb-root"></div>
 	<div id="jfmfs-dialog">
@@ -79,11 +108,9 @@
 		<div id="jfmfs-container"></div>
 		<button id="jfmfs-post" class="button">POST</button>
 	</div>
+</div><!--! end of #ground -->
 </div> <!--! end of #container -->
-<div id="endgame" class="dialog">
-	<h2>Game Over</h2>
-	<div id="score">Final Score: <span>0</span></div>
-</div>
+<div id="firebuttonn"></div>
 <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
@@ -105,7 +132,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-76054-11']);
+  _gaq.push(['_setAccount', 'UA-76054-18']);
   _gaq.push(['_trackPageview']);
 
   (function() {
