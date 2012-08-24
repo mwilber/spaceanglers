@@ -16,7 +16,7 @@ function Police(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 0, "width": 44, "count": 22, "regY": 0, "height": 60}
+			{"regX": 22, "width": 44, "count": 22, "regY": 0, "height": 60}
 		},
 		"position":{
 			"x":pStartX,
@@ -39,7 +39,7 @@ Police.prototype.Move = function() {
 
 	switch(this.actor.status){
 		case "walk":
-			if( (this.startX < 0 && this.actor.GetPos().x >= this.endX) || (this.startX > screen_width && this.actor.GetPos().x <= this.endX) ){
+			if( (this.actor.GetPos().x >= this.endX) || (this.actor.GetPos().x <= this.endX) ){
 				this.actor.status = "fire";
 				this.actor.sprite.gotoAndPlay("aim");
 				this.actor.velocity.x = 0;
@@ -111,6 +111,6 @@ Police.prototype.GetStatus = function() {
 Police.prototype.Levitate = function(pAmt){
 	
 	this.actor.velocity.y = -pAmt;
-	this.actor.sprite.x = pChars[shipIdx].actor.sprite.x-20;
+	this.actor.sprite.x = pChars[shipIdx].actor.sprite.x;
 	
 }

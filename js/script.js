@@ -28,7 +28,7 @@ var presets = {
 	ground: 70,		// y distance from bottom actors are spawned
 	ceiling: 150,	// min height ship can reach
 	lastlevel: 3, 	// # represents array idx
-	dmgDrain: 0.05,
+	dmgDrain: 0.005,
 	dmgShell: 10,
 	maxCiv: 4,
 	srCiv:60,
@@ -41,7 +41,8 @@ var presets = {
 	freqBullet: 20,
 	drainCiv: 0.05,
 	accelerometerSensitivity:10,
-	accelerometerYOffset:7
+	accelerometerYOffset:7,
+	nrgGainCar:50
 };
 var tallyMon = {
 	"abducted": 0,
@@ -89,6 +90,14 @@ $(document).ready(function(){
 	images['police'].onload = HandleImageLoad;
 	images['police'].onerror = HandleImageError;
 	images['police'].src = "assets/police.png";
+	images['car'] = new Image();
+	images['car'].onload = HandleImageLoad;
+	images['car'].onerror = HandleImageError;
+	images['car'].src = "assets/car.png";
+	images['energy'] = new Image();
+	images['energy'].onload = HandleImageLoad;
+	images['energy'].onerror = HandleImageError;
+	images['energy'].src = "assets/energy.png";
 	
 	screen_width = document.getElementById("gamecanvas").width;
 	screen_height = document.getElementById("gamecanvas").height;
@@ -357,7 +366,7 @@ function tick(){
 			bulletz[idx].Move();
 			if(bulletz[idx].actor.sprite.y < 0 || bulletz[idx].actor.sprite.x < 0 || bulletz[idx].actor.sprite.x > screen_width){
 				Disarm(idx);
-			}else if(pChars[shipIdx].actor.hitRadius(bulletz[idx].actor.sprite.x-(pChars[shipIdx].actor.width/2), bulletz[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
+			}else if(pChars[shipIdx].actor.hitRadius(bulletz[idx].actor.sprite.x, bulletz[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
 				EnergyUpdate(-bulletz[idx].damage);
 				Disarm(idx);
 			}
@@ -403,8 +412,8 @@ function HandleNPChars(pArr, pIdx){
 	var resetBeam = true;
 	if( pArr[pIdx].actor.status == "fire" ){
 		if( Math.floor(Math.random()*1000) < presets.freqBullet ){
-			var vX = (pChars[shipIdx].actor.sprite.x+(pChars[shipIdx].actor.width/2)) - pArr[pIdx].actor.GetPos().x;
-			var vY = (pChars[shipIdx].actor.sprite.y+(pChars[shipIdx].actor.height/2)) - pArr[pIdx].actor.GetPos().y;
+			var vX = (pChars[shipIdx].actor.sprite.x) - pArr[pIdx].actor.GetPos().x;
+			var vY = (pChars[shipIdx].actor.sprite.y) - pArr[pIdx].actor.GetPos().y;
 			var vS = vX/vY;
 			
 			bulletz.push(new Bullet(pArr[pIdx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, pArr[pIdx].dmgBullet));
@@ -447,6 +456,7 @@ function HandleNPChars(pArr, pIdx){
 function EnergyUpdate(pVal){
 	tallyMon.energy += pVal;
 	if(tallyMon.energy < 1) tallyMon.energy = 0;
+	if(tallyMon.energy > 100) tallyMon.energy = 100;
 	$('#energy span').html(Math.floor(tallyMon.energy)+"%");
 	if( tallyMon.energy <= 0 ){
 		EndGame();
@@ -476,7 +486,9 @@ function Respawn(pArr, pType){
 				tmpEndPos = screen_width-tmpEndPos;
 				tmpStartKey = "walk";
 			}
-			npCharsPol.splice(0,0,new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
+			//npCharsPol.splice(0,0,new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
+			//stage.addChild(npCharsPol[0].actor.sprite);
+			npCharsPol.splice(0,0,new Car("car", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['car'], tmpStartKey));
 			stage.addChild(npCharsPol[0].actor.sprite);
 			break;
 		case "mil":
@@ -496,20 +508,25 @@ function Respawn(pArr, pType){
 
 function Abduct(pArr, pIdx){
 	// Don't accidentally abduct the wrong thing
-	if(pArr[pIdx].actor.type == "civilian"){
+	if(pArr[pIdx].actor.type == "civilian" || pArr[pIdx].actor.type == "energy"){
 		//stage.removeChild(pArr[pIdx].actor.sprite);
 		//pArr.splice(pIdx,1);
 		pArr[pIdx].actor.status = "splat";
 		pArr[pIdx].actor.sprite.x = -100;
 		pArr[pIdx].actor.sprite.y = -100;
-		tallyMon.abducted++;
-		multiplierTraq++;
-		tallyMon.score += (presets.abductVal*multiplierTraq);
-		DebugOut(tallyMon.abducted);
-		$('#abducted span').html(tallyMon.abducted);
 		
-		pChars.push(new Anno(multiplierTraq));
-		stage.addChild(pChars[pChars.length-1].actor.sprite);
+		if(pArr[pIdx].actor.type == "civilian"){
+			tallyMon.abducted++;
+			multiplierTraq++;
+			tallyMon.score += (presets.abductVal*multiplierTraq);
+			DebugOut(tallyMon.abducted);
+			$('#abducted span').html(tallyMon.abducted);
+			pChars.push(new Anno(multiplierTraq));
+			stage.addChild(pChars[pChars.length-1].actor.sprite);
+		}
+		if(pArr[pIdx].actor.type == "energy"){
+			EnergyUpdate(presets.nrgGainCar);
+		}
 	}
 }
 

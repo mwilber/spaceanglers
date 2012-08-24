@@ -1,16 +1,16 @@
-function Civilian(pName, pStartX, pStartY, pImg) {
+function Energy(pName, pStartX, pStartY, pImg) {
 	
 	this.actor = new Actor({
 		"name":pName,
-		"type":"civilian",
+		"type":"energy",
 		"startkey":"walk_h",
 		"status":"walk",
 		"spritesheet":{
 			"animations":
 			{
-				"walk": [0, 9, "walk"],
-				"stun": [10, 15, "stun"],
-				"splat": [16, 16, "splat"]
+				"walk": [0, 0, "walk"],
+				"stun": [0, 0, "stun"],
+				"splat": [0, 0, "splat"]
 			},
 			"images": [pImg],
 			"frames":
@@ -21,25 +21,17 @@ function Civilian(pName, pStartX, pStartY, pImg) {
 			"y":pStartY
 		},
 		"velocity":{
-			"x":4,
+			"x":0,
 			"y":0
 		},
 		"radius":20
 	});
 }
 
-Civilian.prototype.Move = function() {
+Energy.prototype.Move = function() {
 
 	switch(this.actor.status){
 		case "walk":
-			if ( (Math.floor(Math.random()*50) == 0) || (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
-				this.actor.velocity.x = -this.actor.velocity.x;
-				if(this.actor.velocity.x > 0){
-					this.actor.sprite.gotoAndPlay("walk_h");
-				}else{
-					this.actor.sprite.gotoAndPlay("walk");
-				}
-			}
 			break;
 		case "stun":
 			this.actor.velocity.x = 0;
@@ -70,20 +62,20 @@ Civilian.prototype.Move = function() {
 	
 }
 
-Civilian.prototype.SetStatus = function(pStatus) {
+Energy.prototype.SetStatus = function(pStatus) {
 	
 	this.actor.status = pStatus;
 	this.actor.sprite.gotoAndPlay(pStatus);
 	
 }
 
-Civilian.prototype.GetStatus = function() {
+Energy.prototype.GetStatus = function() {
 	
 	return this.actor.status;
 	
 }
 
-Civilian.prototype.Levitate = function(pAmt){
+Energy.prototype.Levitate = function(pAmt){
 	
 	this.actor.velocity.y = -pAmt;
 	this.actor.sprite.x = pChars[shipIdx].actor.sprite.x;

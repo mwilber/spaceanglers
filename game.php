@@ -138,10 +138,12 @@
 <script src="js/cMonster.js"></script>
 <script src="js/cCivilian.js"></script>
 <script src="js/cPolice.js"></script>
+<script src="js/cCar.js"></script>
 <script src="js/cMilitary.js"></script>
 <script src="js/cBullet.js"></script>
 <script src="js/cBeam.js"></script>
 <script src="js/cAnno.js"></script>
+<script src="js/cEnergy.js"></script>
 
 <script type="text/javascript" src="js/libs/jquery.facebook.multifriend.select.js"></script>
 <script type="text/javascript">
