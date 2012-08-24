@@ -57,6 +57,18 @@ $(document).ready(function(){
 	
 	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	//SetFrame();
+	$('.flexslider').flexslider({
+      	animation: "slide",
+      	slideshow: false, 
+      	controlNav: true,
+      	itemMargin: 0,
+      	animationLoop: true,
+      	directionNav: !Modernizr.touch,
+      	start: function(slider) {
+      	},
+      	after: function(slider) {
+      	}
+    });
 	
 	images['ship'] = new Image();
 	images['ship'].onload = HandleImageLoad;

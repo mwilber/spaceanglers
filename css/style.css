@@ -275,6 +275,10 @@ li{
 	margin-top:200px;
 }
 
+.flexslider{
+	top: -50px;
+}
+
 #gamecanvas{
 	position:relative;
 	top:0px;

@@ -27,6 +27,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
+	<link rel='stylesheet' id='camera-css'  href='css/flexslider.css' type='text/css' media='all'>
 	
 	<script>
 		// this sets the namespace for CreateJS to the window object, so you can instantiate objects without specifying 
@@ -77,7 +78,19 @@
 				</ul>
 			</div>
 			<div id="intro" class="panel" style="z-index:300;">
-				Intro Comic Here
+				<div class="flexslider">
+				  <ul class="slides">
+				    <li>
+				      <img src="http://placehold.it/800x450"/>
+				    </li>
+				    <li>
+				      <img src="http://placehold.it/800x450"/>
+				    </li>
+				    <li>
+				      <img src="http://placehold.it/800x450"/>
+				    </li>
+				  </ul>
+				</div>
 				<a id="btn_intro_start" href="#" onclick="return false;">Start Game</a>
 			</div>
 			<div id="scorebox" class="panel" style="z-index:200;">
@@ -115,6 +128,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
 
+<script src="js/libs/jquery.flexslider-min.js"></script>
 <script src="js/script.js"></script>
 <script src="js/fb.js"></script>
 
