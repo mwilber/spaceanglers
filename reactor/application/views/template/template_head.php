@@ -25,7 +25,7 @@
 			<nav>
 				<ul>
 					<? if( $this->session->userdata('userEmail') ): ?>
-						<li><a href="<?= base_url() ?>flashdata" class="flashdata">FlashData</a></li>
+						<li><a href="<?= base_url() ?>score" class="score">Scores</a></li>
 						<li><a href="<?= base_url() ?>users" class="users">Users</a></li>
 						<li><a href="<?= base_url() ?>welcome/logout" class="logout">Log Out</a></li>
 					<? else: ?>

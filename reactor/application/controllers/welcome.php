@@ -34,7 +34,7 @@ class Welcome extends CI_Controller {
 			// the form has successfully validated
 			if($this->user_model->Login(array('userEmail' => $this->input->post('userEmail'), 'userPassword' => $this->input->post('userPassword'))))
 			{
-				redirect('users/index');
+				redirect('score/index');
 			} //redirect('welcome/login');
 		//}
 		

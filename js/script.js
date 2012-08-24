@@ -4,6 +4,7 @@
 
 var images = new Array();
 var numberOfImagesLoaded = 0;
+var startTick;
 
 var canvas;
 var stage;
@@ -57,60 +58,7 @@ var gameStatus = "start";
 
 $(document).ready(function(){
 	
-	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
-	//SetFrame();
-	$('header').hide();
-	
-	$('.flexslider').flexslider({
-      	animation: "slide",
-      	slideshow: false, 
-      	controlNav: true,
-      	itemMargin: 0,
-      	animationLoop: true,
-      	directionNav: !Modernizr.touch,
-      	start: function(slider) {
-      	},
-      	after: function(slider) {
-      	}
-    });
-	
-	images['ship'] = new Image();
-	images['ship'].onload = HandleImageLoad;
-	images['ship'].onerror = HandleImageError;
-	images['ship'].src = "assets/anim_ship_spin.png";
-	images['civilian'] = new Image();
-	images['civilian'].onload = HandleImageLoad;
-	images['civilian'].onerror = HandleImageError;
-	images['civilian'].src = "assets/civilian.png";
-	images['military'] = new Image();
-	images['military'].onload = HandleImageLoad;
-	images['military'].onerror = HandleImageError;
-	images['military'].src = "assets/military.png";
-	images['police'] = new Image();
-	images['police'].onload = HandleImageLoad;
-	images['police'].onerror = HandleImageError;
-	images['police'].src = "assets/police.png";
-	images['car'] = new Image();
-	images['car'].onload = HandleImageLoad;
-	images['car'].onerror = HandleImageError;
-	images['car'].src = "assets/car.png";
-	images['energy'] = new Image();
-	images['energy'].onload = HandleImageLoad;
-	images['energy'].onerror = HandleImageError;
-	images['energy'].src = "assets/energy.png";
-	
-	screen_width = document.getElementById("gamecanvas").width;
-	screen_height = document.getElementById("gamecanvas").height;
-	
-	if(Modernizr.touch){
-		$('#firebuttonn').show();
-	}else{
-		$('#firebuttonn').hide();
-	}
-	
-	// create a new stage and point it at our canvas:
-	stage = new createjs.Stage(document.getElementById("gamecanvas"));
-	
+	PageInit();
 
 });
 
@@ -221,6 +169,7 @@ $('#btn_home').click(function(){
 
 $('#btn_restart').click(function(){
 	$('#start').show();
+	PageInit();
 });
 
 $('#btn_savescore').click(function(){
@@ -237,6 +186,85 @@ $('#btn_savescore').click(function(){
 //	Game Functions
 /////////////////////////////////////////////////////////////////////////////
 
+function PageInit(){
+	
+	images = new Array();
+	numberOfImagesLoaded = 0;
+	startTick = createjs.Ticker.getTicks();
+
+	pChars = new Array();
+	npCharsCiv = new Array();
+	npCharsPol = new Array();
+	npCharsMil = new Array();
+	bulletz = new Array();
+	beamIdx = -1;
+	shipIdx = -1;
+	multiplierTraq = 0;
+	presets.maxCiv = 4;
+	presets.maxMil = 0;
+	presets.maxPol = 0;
+	
+	tallyMon.abducted = 0;
+	tallyMon.energy = 100;
+	tallyMon.score = 0;
+
+	gameStatus = "start";
+	
+	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
+	//SetFrame();
+	$('header').hide();
+	
+	$('.flexslider').flexslider({
+      	animation: "slide",
+      	slideshow: false, 
+      	controlNav: true,
+      	itemMargin: 0,
+      	animationLoop: true,
+      	directionNav: !Modernizr.touch,
+      	start: function(slider) {
+      	},
+      	after: function(slider) {
+      	}
+    });
+	
+	images['ship'] = new Image();
+	images['ship'].onload = HandleImageLoad;
+	images['ship'].onerror = HandleImageError;
+	images['ship'].src = "assets/anim_ship_spin.png";
+	images['civilian'] = new Image();
+	images['civilian'].onload = HandleImageLoad;
+	images['civilian'].onerror = HandleImageError;
+	images['civilian'].src = "assets/civilian.png";
+	images['military'] = new Image();
+	images['military'].onload = HandleImageLoad;
+	images['military'].onerror = HandleImageError;
+	images['military'].src = "assets/military.png";
+	images['police'] = new Image();
+	images['police'].onload = HandleImageLoad;
+	images['police'].onerror = HandleImageError;
+	images['police'].src = "assets/police.png";
+	images['car'] = new Image();
+	images['car'].onload = HandleImageLoad;
+	images['car'].onerror = HandleImageError;
+	images['car'].src = "assets/car.png";
+	images['energy'] = new Image();
+	images['energy'].onload = HandleImageLoad;
+	images['energy'].onerror = HandleImageError;
+	images['energy'].src = "assets/energy.png";
+	
+	screen_width = document.getElementById("gamecanvas").width;
+	screen_height = document.getElementById("gamecanvas").height;
+	
+	if(Modernizr.touch){
+		$('#firebuttonn').show();
+	}else{
+		$('#firebuttonn').hide();
+	}
+	
+	// create a new stage and point it at our canvas:
+	stage = new createjs.Stage(document.getElementById("gamecanvas"));
+}
+
 function HandleImageLoad(e) {
     numberOfImagesLoaded++;
     
@@ -246,9 +274,9 @@ function HandleImageLoad(e) {
     if (numberOfImagesLoaded == (GetObjectPropertyCount(images))) {
 		numberOfImagesLoaded = 0;
         //StartGame();
-        $('.panel').hide();
-		InitGame();
-		//$('#loading').hide();
+        //$('.panel').hide();
+		//InitGame();
+		$('#loading').hide();
 	}
 }
 
@@ -257,19 +285,6 @@ function HandleImageError(e) {
 }
 
 function InitGame(){
-	
-	mousePos = {
-		"x":0,
-		"y":0
-	}
-	pChars = new Array();
-	npCharsCiv = new Array();
-	npCharsPol = new Array();
-	npCharsMil = new Array();
-	bulletz = new Array();
-	beamIdx = -1;
-	shipIdx = -1;
-	multiplierTraq = 0;
 	
 	stage.clear();
 	
@@ -395,8 +410,8 @@ function tick(){
 		// Add new NPCs
 		///////////////////////////
 		if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
-		if( createjs.Ticker.getTicks() == 150 || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
-		if( createjs.Ticker.getTicks() == 500 || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
+		if( createjs.Ticker.getTicks() == (startTick+150) || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
+		if( createjs.Ticker.getTicks() == (startTick+500) || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
 	
 		///////////////////////////
 		// Update the energy bar
