@@ -234,9 +234,9 @@ function HandleImageLoad(e) {
     if (numberOfImagesLoaded == (GetObjectPropertyCount(images))) {
 		numberOfImagesLoaded = 0;
         //StartGame();
-        //$('.panel').hide();
-		//InitGame();
-		$('#loading').hide();
+        $('.panel').hide();
+		InitGame();
+		//$('#loading').hide();
 	}
 }
 
@@ -315,6 +315,7 @@ function StartGame(){
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
 	stage.addChild(pChars[pChars.length-1].actor.sprite);
 	shipIdx = pChars.length-1;
+	
 }
 
 function tick(){
@@ -325,6 +326,7 @@ function tick(){
 		///////////////////////////
 		for( idx in pChars ){
 			pChars[idx].Move();
+			if( pChars[idx].actor.type == "anno" ) Decay(pChars, idx);
 		}
 		
 		///////////////////////////
@@ -497,6 +499,9 @@ function Abduct(pArr, pIdx){
 		tallyMon.score += presets.abductVal;
 		DebugOut(tallyMon.abducted);
 		$('#abducted span').html(tallyMon.abducted);
+		
+		pChars.push(new Anno('1'));
+		stage.addChild(pChars[pChars.length-1].actor.sprite);
 	}
 }
 
