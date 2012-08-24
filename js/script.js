@@ -20,6 +20,7 @@ var npCharsMil = new Array();
 var bulletz = new Array();
 var beamIdx = -1;
 var shipIdx = -1;
+var multiplierTraq = 0;
 var presets = {
 	margin: 100,
 	g: 0.2,			// Gravity
@@ -57,6 +58,8 @@ $(document).ready(function(){
 	
 	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	//SetFrame();
+	$('header').hide();
+	
 	$('.flexslider').flexslider({
       	animation: "slide",
       	slideshow: false, 
@@ -257,6 +260,7 @@ function InitGame(){
 	bulletz = new Array();
 	beamIdx = -1;
 	shipIdx = -1;
+	multiplierTraq = 0;
 	
 	stage.clear();
 	
@@ -420,6 +424,9 @@ function HandleNPChars(pArr, pIdx){
 			Abduct(pArr, pIdx);
 		}else if(pChars[beamIdx].actor.sprite.visible && pChars[beamIdx].hitTest(pArr[pIdx].actor.GetPos())){
 			if( pChars[beamIdx].charIdx < 0 || pChars[beamIdx].charIdx == pIdx ){
+				if(pArr[pIdx].actor.type != "civilian"){
+					multiplierTraq=0;
+				}
 				resetBeam = false;
 				pChars[beamIdx].charIdx = pIdx;
 				if(pArr[pIdx].GetStatus() != "stun"){
@@ -496,11 +503,12 @@ function Abduct(pArr, pIdx){
 		pArr[pIdx].actor.sprite.x = -100;
 		pArr[pIdx].actor.sprite.y = -100;
 		tallyMon.abducted++;
-		tallyMon.score += presets.abductVal;
+		multiplierTraq++;
+		tallyMon.score += (presets.abductVal*multiplierTraq);
 		DebugOut(tallyMon.abducted);
 		$('#abducted span').html(tallyMon.abducted);
 		
-		pChars.push(new Anno('1'));
+		pChars.push(new Anno(multiplierTraq));
 		stage.addChild(pChars[pChars.length-1].actor.sprite);
 	}
 }
