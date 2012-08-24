@@ -212,7 +212,7 @@ function PageInit(){
 	
 	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	//SetFrame();
-	$('header').hide();
+	//$('header').hide();
 	
 	$('.flexslider').flexslider({
       	animation: "slide",
