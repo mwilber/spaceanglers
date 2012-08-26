@@ -188,6 +188,13 @@ $('#btn_savescore').click(function(){
 
 function PageInit(){
 	
+	createjs.FlashPlugin.BASE_PATH = "../src/soundjs/" // Initialize the base path from this document to the Flash Plugin
+	if (!createjs.SoundJS.checkPlugin(true)) {
+		alert('No Sound Support');
+		document.getElementById("main").style.display = "none";
+		return;
+	}
+	
 	images = new Array();
 	numberOfImagesLoaded = 0;
 	startTick = createjs.Ticker.getTicks();
@@ -263,6 +270,27 @@ function PageInit(){
 	
 	// create a new stage and point it at our canvas:
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
+	
+	// begin loading content (only sounds to load)
+		var manifest = [
+			{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
+			{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
+			{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
+			{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
+		];
+
+		preload = new createjs.PreloadJS();
+		preload.onComplete = doneLoading;
+		preload.installPlugin(createjs.SoundJS);
+		preload.loadManifest(manifest);
+}
+
+function doneLoading() {
+
+	// start the music
+	createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
+	//SoundInstance play ( value , interrupt 					, delay , offset , loop , volume , pan )
+
 }
 
 function HandleImageLoad(e) {

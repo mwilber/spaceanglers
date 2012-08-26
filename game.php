@@ -35,6 +35,9 @@
 		var createjs = window;
 	</script>
 	
+	<script type="text/javascript" src="js/libs/preloadjs-0.2.0.min.js"></script>
+	<script type="text/javascript" src="js/libs/easeljs-0.5.0.min.js"></script>
+	
 	<script src="js/libs/easeljs/utils/UID.js"></script>
 	<script src="js/libs/easeljs/geom/Matrix2D.js"></script>
 	<script src="js/libs/easeljs/events/MouseEvent.js"></script>
@@ -52,6 +55,10 @@
 	<script src="js/libs/easeljs/utils/Ticker.js"></script>
 	<script src="js/libs/easeljs/geom/Rectangle.js"></script>
 	<script src="js/libs/easeljs/geom/Point.js"></script>
+	<script type="text/javascript" src="js/libs/soundjs/SoundJS.js"></script>
+	<script type="text/javascript" src="js/libs/soundjs/HTMLAudioPlugin.js"></script>
+	<script type="text/javascript" src="js/libs/swfobject.js"></script>
+	<script type="text/javascript" src="js/libs/soundjs/FlashPlugin.js"></script>
 
 
 	<script src="js/libs/modernizr-2.0.6.min.js"></script>
