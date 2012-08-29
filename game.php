@@ -76,6 +76,7 @@
 		<div id="canvasbkg">
 			<div id="loading" class="panel" style="z-index:500;">
 				<h1>Loading...</h1>
+				<h1 id="percent" style="margin-top:0px;"></h1>
 			</div>
 			<div id="start" class="panel" style="z-index:400;">
 				<ul>

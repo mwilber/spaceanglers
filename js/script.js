@@ -219,7 +219,7 @@ function PageInit(){
 	
 	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	//SetFrame();
-	//$('header').hide();
+	$('header').hide();
 	
 	$('.flexslider').flexslider({
       	animation: "slide",
@@ -235,28 +235,28 @@ function PageInit(){
     });
 	
 	images['ship'] = new Image();
-	images['ship'].onload = HandleImageLoad;
-	images['ship'].onerror = HandleImageError;
+	//images['ship'].onload = HandleImageLoad;
+	//images['ship'].onerror = HandleImageError;
 	images['ship'].src = "assets/anim_ship_spin.png";
 	images['civilian'] = new Image();
-	images['civilian'].onload = HandleImageLoad;
-	images['civilian'].onerror = HandleImageError;
+	//images['civilian'].onload = HandleImageLoad;
+	//images['civilian'].onerror = HandleImageError;
 	images['civilian'].src = "assets/civilian.png";
 	images['military'] = new Image();
-	images['military'].onload = HandleImageLoad;
-	images['military'].onerror = HandleImageError;
+	//images['military'].onload = HandleImageLoad;
+	//images['military'].onerror = HandleImageError;
 	images['military'].src = "assets/military.png";
 	images['police'] = new Image();
-	images['police'].onload = HandleImageLoad;
-	images['police'].onerror = HandleImageError;
+	//images['police'].onload = HandleImageLoad;
+	//images['police'].onerror = HandleImageError;
 	images['police'].src = "assets/police.png";
 	images['car'] = new Image();
-	images['car'].onload = HandleImageLoad;
-	images['car'].onerror = HandleImageError;
+	//images['car'].onload = HandleImageLoad;
+	//images['car'].onerror = HandleImageError;
 	images['car'].src = "assets/car.png";
 	images['energy'] = new Image();
-	images['energy'].onload = HandleImageLoad;
-	images['energy'].onerror = HandleImageError;
+	//images['energy'].onload = HandleImageLoad;
+	//images['energy'].onerror = HandleImageError;
 	images['energy'].src = "assets/energy.png";
 	
 	screen_width = document.getElementById("gamecanvas").width;
@@ -272,25 +272,41 @@ function PageInit(){
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
 	
 	// begin loading content (only sounds to load)
-		var manifest = [
-			{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
-			{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
-			{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
-			{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
-		];
+	var manifest = [
+		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
+		{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
+		{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
+		{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
+		{id:"ship", src:"assets/anim_ship_spin.png"},
+		{id:"civilian", src:"assets/civilian.png"},
+		{id:"military", src:"assets/military.png"},
+		{id:"police", src:"assets/police.png"},
+		{id:"car", src:"assets/car.png"},
+		{id:"energy", src:"assets/energy.png"},
+		{id:"starfield_blue", src:"images/starfield_blue.png"},
+		{id:"ground", src:"assets/ground.png"},
+		{id:"starfield", src:"assets/sky.png"},
+	];
 
-		preload = new createjs.PreloadJS();
-		preload.onComplete = doneLoading;
-		preload.installPlugin(createjs.SoundJS);
-		preload.loadManifest(manifest);
+	preload = new createjs.PreloadJS();
+	preload.onComplete = DoneLoading;
+	preload.onProgress = HandleLoadProgress;
+	preload.installPlugin(createjs.SoundJS);
+	preload.loadManifest(manifest);
 }
 
-function doneLoading() {
+function DoneLoading(event) {
 
 	// start the music
 	createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 	//SoundInstance play ( value , interrupt 					, delay , offset , loop , volume , pan )
+	
+	$('#loading').hide();
 
+}
+
+function HandleLoadProgress(event){
+	$('#loading #percent').html(Math.floor(preload.progress*100)+"%");
 }
 
 function HandleImageLoad(e) {
