@@ -1,3 +1,12 @@
+<?php
+	$SHARE_DESCRIPTION = "An HTML5 Canvas video game by GreenZeta.";
+	$SHARE_TITLE = "Space Anglers";
+	if(isset($_GET['score'])){
+		$SHARE_TITLE = "I scored ".$_GET['score']." on Space Anglers!";
+	}
+	$SHARE_LINK = "http://spaceanglers.com/";
+	$SHARE_IMAGE = "http://spaceanglers.com/images/icon.png";
+?>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
 
@@ -12,15 +21,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 	<title>Space Anglers</title>
-	<meta name="description" content="An HTML5 Canvas video game by GreenZeta.">
+
+	<meta name="description" content="<?php echo $SHARE_DESCRIPTION ?>">
 	<meta name="author" content="Matthew Wilber">
-	<meta property="og:title" content="Space Anglers" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://spaceanglers.com/" />
-	<meta property="og:image" content="http://spaceanglers.com/images/icon.png" />
-	<meta property="og:site_name" content="https://spaceanglers.com/" />
-	<meta property="fb:admins" content="631337813" />
-	<meta property="og:description" content="An HTML5 Canvas video game by GreenZeta. Coming - Halloween 2012" />
+	<meta property="og:title" content="<?php echo $SHARE_TITLE ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<?php echo $SHARE_LINK; ?>" />
+    <meta property="og:image" content="<?php echo $SHARE_IMAGE; ?>" />
+    <meta property="og:site_name" content="<?php echo $SHARE_TITLE ?>"/>
+    <meta property="fb:admins" content="631337813" />
+    <meta property="og:description" content="<?php echo $SHARE_DESCRIPTION ?>" />
 
 	<meta name="viewport" content="width=900">
 
