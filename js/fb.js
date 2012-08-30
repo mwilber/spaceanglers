@@ -121,9 +121,9 @@ function WallPost(pLink, pTitle, pDescription, pImage, pCaption){
 		},
 		function(response) {
 			if (response && response.post_id) {
-				alert('Post was published.');
+				//alert('Post was published.');
 			} else {
-				alert('Post was not published.');
+				//alert('Post was not published.');
 			}
 		}
 	);
@@ -141,9 +141,9 @@ function ShareMessage(pLink, pTitle, pDescription, pImage){
 		},
 		function(response) {
 			if (response && response.post_id) {
-				alert('Message was sent.');
+				//alert('Message was sent.');
 			} else {
-				alert('Message was not sent.');
+				//alert('Message was not sent.');
 			}
 		}
 	);
@@ -158,9 +158,9 @@ function SendInvite(pMessage){
 		},
 		function(response) {
 			if (response && response.post_id) {
-				alert('Invite was sent.');
+				//alert('Invite was sent.');
 			} else {
-				alert('Invite was not sent.');
+				//alert('Invite was not sent.');
 			}
 		}
 	);

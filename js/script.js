@@ -182,6 +182,24 @@ $('#btn_savescore').click(function(){
 	} );
 });
 
+$('#facebook').click(function(){
+	WallPost(social['link'] , social['title'] , social['description'] , social['image'] , '');
+	return false;
+});
+
+$('#tweeters').click(function(){
+	var twcontent = "I scored "+tallyMon.score+" on Space Anglers. An HTML5 canvas game by GreenZeta "+social['link'];
+	openpopup('http://twitter.com/home?status='+escape(twcontent),'tweeters',550,450);
+	return false;
+});
+
+$('#googleplus').click(function(){
+	var url = "https://plus.google.com/share?url="+escape(social['link']+"game.php?score="+tallyMon.score);
+	openpopup(url,'gplus',550,450);
+	return false;
+});
+	
+
 /////////////////////////////////////////////////////////////////////////////
 //	Game Functions
 /////////////////////////////////////////////////////////////////////////////

@@ -39,7 +39,13 @@
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
 	<link rel='stylesheet' id='camera-css'  href='css/flexslider.css' type='text/css' media='all'>
 	
-	<script>
+	<script type="text/javascript">
+		var social = [];
+		social['title'] = "<?=$SHARE_TITLE?>";
+		social['description'] = "<?=$SHARE_DESCRIPTION?>";
+		social['image'] = "<?=$SHARE_IMAGE?>";
+		social['link'] = "<?=$SHARE_LINK?>";
+		
 		// this sets the namespace for CreateJS to the window object, so you can instantiate objects without specifying 
 		// the namespace: "new Graphics()" instead of "new createjs.Graphics()"
 		var createjs = window;
@@ -121,6 +127,12 @@
 				Name:<input type="text" id="scorename" value="Name"/>
 				<a id="btn_savescore" href="#" onclick="return false;">Save Score</a>
 				<a id="btn_restart" href="#" onclick="return false;">Restart</a>
+				<ul>
+					<li>Share</li>
+					<li><a id="facebook" href="#">Facebook</a></li>
+					<li><a id="tweeters" href="#">Twitter</a></li>
+					<li><a id="googleplus" href="#">Google+</a></li>
+				</ul>
 			</div>
 			<div id="hud" style="z-index: 110;">
 				<div id="abducted">Abducted: <span>0</span></div>
