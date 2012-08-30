@@ -235,8 +235,8 @@ function PageInit(){
 
 	gameStatus = "start";
 	
-	//FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
-	//SetFrame();
+	FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
+	SetFrame();
 	$('header').hide();
 	
 	$('.flexslider').flexslider({
