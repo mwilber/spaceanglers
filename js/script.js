@@ -183,7 +183,7 @@ $('#btn_savescore').click(function(){
 });
 
 $('#facebook').click(function(){
-	WallPost(social['link'] , social['title'] , social['description'] , social['image'] , '');
+	WallPost(social['link'] , "I scored "+tallyMon.score+" on Space Anglers. An HTML5 canvas game by GreenZeta", social['description'] , social['image'] , '');
 	return false;
 });
 
