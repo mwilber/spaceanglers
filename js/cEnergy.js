@@ -4,7 +4,7 @@ function Energy(pName, pStartX, pStartY, pImg) {
 		"name":pName,
 		"type":"energy",
 		"startkey":"walk_h",
-		"status":"walk",
+		"status":"stun",
 		"spritesheet":{
 			"animations":
 			{
@@ -21,11 +21,13 @@ function Energy(pName, pStartX, pStartY, pImg) {
 			"y":pStartY
 		},
 		"velocity":{
-			"x":0,
-			"y":0
+			"x":5,
+			"y":-10
 		},
 		"radius":20
 	});
+	this.startPosX = pStartX;
+	this.startPosY = pStartY;
 }
 
 Energy.prototype.Move = function() {
@@ -34,7 +36,7 @@ Energy.prototype.Move = function() {
 		case "walk":
 			break;
 		case "stun":
-			this.actor.velocity.x = 0;
+			//this.actor.velocity.x = 0;
 			break;
 	}
 	
@@ -53,7 +55,7 @@ Energy.prototype.Move = function() {
 			this.actor.status = "walk";
 			this.actor.sprite.gotoAndPlay("walk_h");
 			this.actor.velocity.y = 0;
-			this.actor.velocity.x = 4;
+			this.actor.velocity.x = 0;
 			this.actor.sprite.y = screen_height-presets.ground;
 		}
 	}

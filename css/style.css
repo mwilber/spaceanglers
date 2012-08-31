@@ -201,9 +201,18 @@ table { border-collapse: collapse; border-spacing: 0; }
    Author: Matthew Wilber mwilber@gmail.com
    ========================================================================== */
 
-body{
+body, input{
 	font-family: 'Press Start 2P', sans-serif;
 	background-color:#4c4c4c;
+}
+
+input, #btn_savescore{
+	color:#ccc;
+	background-color:#000;
+	border: solid 2px #ccc;
+	padding:3px;
+	text-decoration: none;
+	width: 180px;
 }
 
 header{
@@ -342,6 +351,10 @@ li{
 	position: relative;
 	left: 50%;
 	margin-left: 200px;
+}
+
+#grp_savedscore{
+	display:none;
 }
 
 #endgame{

@@ -25,22 +25,5 @@ Anno.prototype.Move = function() {
 	
 	this.actor.sprite.y--;
 	
-	/*var shipX = pChars[shipIdx].actor.sprite.x;
-	//shipX += pChars[shipIdx].actor.width/2;
-	var shipY = pChars[shipIdx].actor.sprite.y;
-	shipY -= 20;
-	
-	// Do not let the ship fly lower than the ceiling
-    if(mousePos.y > screen_height-presets.ceiling){
-    	mousePos.y = screen_height-presets.ceiling;
-    }
-	
-	this.actor.sprite.x = shipX;
-	this.actor.sprite.y = shipY;
-	
-	var scale = 1-(shipY/screen_height);
-	
-	//DebugOut(scale);
-	this.actor.sprite.scaleY = scale;*/
 }
 

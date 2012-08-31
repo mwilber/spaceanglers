@@ -30,7 +30,7 @@
 			background-image:url('images/starfield_blue.png');
 		}
 		header{
-			margin:70px auto;
+			margin:30px auto;
 			text-align: center;
 		}
 		h1{
@@ -55,7 +55,8 @@
 		<a href="http://www.greenzeta.com/" target="_blank"><img src="images/logo_header.png"/></a>
 	</header>
 	<div id="main" role="main">
-		<h1>Coming - October 2012</h1>
+		<h1 style="font-size:30px;">An HTML5 Canvas video game.</h1>
+		<h1 style="margin-top:0px;">Coming October 2012</h1>
 		<a href="http://www.greenzeta.com/" target="_blank">www.GreenZeta.com</a>
 	</div>
 	<div id="fb-root"></div>

@@ -20,7 +20,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Space Anglers</title>
+	<title><?php echo $SHARE_TITLE ?></title>
 
 	<meta name="description" content="<?php echo $SHARE_DESCRIPTION ?>">
 	<meta name="author" content="Matthew Wilber">
@@ -122,16 +122,16 @@
 				<div id="scores"></div>
 			</div>
 			<div id="endgame" class="panel" style="z-index:150;">
-				<h2>Game Over</h2>
-				<div id="score">Final Score: <span>0</span></div>
-				Name:<input type="text" id="scorename" value="Name"/>
-				<a id="btn_savescore" href="#" onclick="return false;">Save Score</a>
-				<a id="btn_restart" href="#" onclick="return false;">Restart</a>
-				<ul>
-					<li>Share</li>
+				<h2>Game Over</h2>			
+				<ul style="margin-top:40px;">
+					<li id="score">Final Score: <span>0</span></li>
+					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save Score</a></li>
+					<li id="grp_savedscore">Score Saved!<br/><a id="btn_viewhighscore" href="#" onclick="return false;">View High Scores</a></li>
+					<li style="margin-top:40px;">Share</li>
 					<li><a id="facebook" href="#">Facebook</a></li>
 					<li><a id="tweeters" href="#">Twitter</a></li>
 					<li><a id="googleplus" href="#">Google+</a></li>
+					<li style="margin-top:40px;"><a id="btn_restart" href="#" onclick="return false;">New Game</a></li>
 				</ul>
 			</div>
 			<div id="hud" style="z-index: 110;">

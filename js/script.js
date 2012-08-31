@@ -163,6 +163,12 @@ $('#btn_highscore').click(function(){
 	$('#scorebox #scores').load('reactor/score/topten');
 });
 
+$('#btn_viewhighscore').click(function(){
+	$('.panel').hide();
+	$('#scorebox').show();
+	$('#scorebox #scores').load('reactor/score/topten');
+});
+
 $('#btn_home').click(function(){
 	$('#start').show();
 });
@@ -177,9 +183,15 @@ $('#btn_savescore').click(function(){
 	DebugOut(tallyMon);
 	DebugOut(tallyMon.score);
 	var scorename = $('#scorename').val();
-	$.post("reactor/score/add", { scoreName: scorename, scoreNumber: tallyMon.score }, function(data){
-		alert("Score Posted!");
-	} );
+	if(scorename == "Name"){
+		alert('Enter your name');
+	}else{
+		$.post("reactor/score/add", { scoreName: scorename, scoreNumber: tallyMon.score }, function(data){
+			//alert("Score Posted!");
+			$('#grp_savescore').hide();
+			$('#grp_savedscore').show();
+		} );
+	}
 });
 
 $('#facebook').click(function(){
@@ -225,9 +237,9 @@ function PageInit(){
 	beamIdx = -1;
 	shipIdx = -1;
 	multiplierTraq = 0;
-	presets.maxCiv = 4;
-	presets.maxMil = 0;
-	presets.maxPol = 0;
+	presets.maxCiv = -20;
+	presets.maxMil = -20;
+	presets.maxPol = 1;
 	
 	tallyMon.abducted = 0;
 	tallyMon.energy = 100;
@@ -320,6 +332,8 @@ function DoneLoading(event) {
 	//SoundInstance play ( value , interrupt 					, delay , offset , loop , volume , pan )
 	
 	$('#loading').hide();
+	//$('.panel').hide();
+	//$('#endgame').show();
 
 }
 
@@ -598,8 +612,10 @@ function Abduct(pArr, pIdx){
 			tallyMon.score += (presets.abductVal*multiplierTraq);
 			DebugOut(tallyMon.abducted);
 			$('#abducted span').html(tallyMon.abducted);
-			pChars.push(new Anno(multiplierTraq));
-			stage.addChild(pChars[pChars.length-1].actor.sprite);
+			if(multiplierTraq > 1){
+				pChars.push(new Anno(multiplierTraq));
+				stage.addChild(pChars[pChars.length-1].actor.sprite);
+			}
 		}
 		if(pArr[pIdx].actor.type == "energy"){
 			EnergyUpdate(presets.nrgGainCar);
