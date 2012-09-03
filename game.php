@@ -132,7 +132,7 @@
 					<li id="score">Final Score: <span>0</span></li>
 					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save</a></li>
 					<li id="grp_savedscore">Saved! <a id="btn_viewhighscore" href="#" onclick="return false;">High Scores</a></li>
-					<li style="margin-top:40px;">Share: <a id="facebook" href="#">Fb</a> <a id="tweeters" href="#">Tw</a> <a id="googleplus" href="#">G+</a></li>
+					<li style="margin-top:40px;">Share: <a id="facebook" href="#"><img src="assets/share_fb.png"/></a> <a id="tweeters" href="#"><img src="assets/share_tw.png"/></a> <a id="googleplus" href="#"><img src="assets/share_gp.png"/></a></li>
 					<li style="margin-top:40px;"><a id="btn_restart" href="#" onclick="return false;">New Game</a></li>
 				</ul>
 			</div>

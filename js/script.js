@@ -324,6 +324,9 @@ function PageInit(){
 		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
 		{id:"panel_bkg", src:"assets/panel_bkg.jpg"},
 		{id:"panel_bkg_blank", src:"assets/panel_bkg_blank.jpg"},
+		{id:"share_fb", src:"assets/share_fb.png"},
+		{id:"share_tw", src:"assets/share_tw.png"},
+		{id:"share_gp", src:"assets/share_gp.png"},
 	];
 
 	preload = new createjs.PreloadJS();
