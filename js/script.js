@@ -237,9 +237,9 @@ function PageInit(){
 	beamIdx = -1;
 	shipIdx = -1;
 	multiplierTraq = 0;
-	presets.maxCiv = -20;
-	presets.maxMil = -20;
-	presets.maxPol = 1;
+	presets.maxCiv = 4;
+	presets.maxMil = 0;
+	presets.maxPol = 0;
 	
 	tallyMon.abducted = 0;
 	tallyMon.energy = 100;
