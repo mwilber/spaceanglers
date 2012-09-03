@@ -323,6 +323,7 @@ function PageInit(){
 		{id:"intro_page_3", src:"assets/intro_pg_3.png"},
 		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
 		{id:"panel_bkg", src:"assets/panel_bkg.jpg"},
+		{id:"panel_bkg_blank", src:"assets/panel_bkg_blank.jpg"},
 	];
 
 	preload = new createjs.PreloadJS();

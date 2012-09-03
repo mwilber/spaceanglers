@@ -326,7 +326,7 @@ li{
 }
 
 #loading, #intro{
-	background-image:none;
+	background-image:url('../assets/panel_bkg_blank.jpg');
 }
 
 #intro ul{
