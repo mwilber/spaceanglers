@@ -222,9 +222,9 @@ function PageInit(){
 	
 	createjs.FlashPlugin.BASE_PATH = "../src/soundjs/" // Initialize the base path from this document to the Flash Plugin
 	if (!createjs.SoundJS.checkPlugin(true)) {
-		alert('No Sound Support');
-		document.getElementById("main").style.display = "none";
-		return;
+		//alert('No Sound Support');
+		//document.getElementById("main").style.display = "none";
+		//return;
 	}
 	
 	images = new Array();
