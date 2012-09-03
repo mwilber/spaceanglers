@@ -249,7 +249,7 @@ function PageInit(){
 	
 	FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	SetFrame();
-	$('header').hide();
+	//$('header').hide();
 	
 	$('.flexslider').flexslider({
       	animation: "slide",
@@ -316,6 +316,10 @@ function PageInit(){
 		{id:"starfield_blue", src:"images/starfield_blue.png"},
 		{id:"ground", src:"assets/ground.png"},
 		{id:"starfield", src:"assets/sky.png"},
+		{id:"intro_page_1", src:"assets/intro_pg_1.png"},
+		{id:"intro_page_2", src:"assets/intro_pg_2.png"},
+		{id:"intro_page_3", src:"assets/intro_pg_3.png"},
+		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
 	];
 
 	preload = new createjs.PreloadJS();

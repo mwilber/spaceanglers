@@ -105,13 +105,16 @@
 				<div class="flexslider">
 				  <ul class="slides">
 				    <li>
-				      <img src="http://placehold.it/800x450"/>
+				      <img src="assets/intro_pg_1.png" width="800" height="450"/>
 				    </li>
 				    <li>
-				      <img src="http://placehold.it/800x450"/>
+				      <img src="assets/intro_pg_2.png" width="800" height="450"/>
 				    </li>
 				    <li>
-				      <img src="http://placehold.it/800x450"/>
+				      <img src="assets/intro_pg_3.png" width="800" height="450"/>
+				    </li>
+				    <li>
+				      <img src="assets/intro_pg_4.png" width="800" height="450"/>
 				    </li>
 				  </ul>
 				</div>

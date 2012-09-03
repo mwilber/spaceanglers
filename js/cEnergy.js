@@ -8,13 +8,13 @@ function Energy(pName, pStartX, pStartY, pImg) {
 		"spritesheet":{
 			"animations":
 			{
-				"walk": [0, 0, "walk"],
-				"stun": [0, 0, "stun"],
-				"splat": [0, 0, "splat"]
+				"walk": [0, 19, "walk"],
+				"stun": [0, 19, "stun"],
+				"splat": [0, 19, "splat"]
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 22, "width": 44, "count": 17, "regY": 0, "height": 58}
+			{"regX":24, "width": 48, "count": 20, "regY":-10, "height": 48}
 		},
 		"position":{
 			"x":pStartX,

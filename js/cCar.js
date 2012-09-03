@@ -8,15 +8,13 @@ function Car(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 		"spritesheet":{
 			"animations":
 			{
-				"walk": [0, 0, "walk"],
-				"stun": [10, 10, "stun"],
-				"splat": [16, 16, "splat"],
-				"aim": [17, 17, "aim"],
-				"fire": [17, 21, "aim"]
+				"walk": [0, 7, "walk"],
+				"stun": [8, 8, "stun"],
+				"splat": [9, 9, "splat"]
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 22, "width": 44, "count": 22, "regY": 0, "height": 60}
+			{"regX": 117, "width": 182, "count": 10, "regY": 10, "height": 70}
 		},
 		"position":{
 			"x":pStartX,
