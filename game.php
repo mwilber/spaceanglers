@@ -124,7 +124,7 @@
 			<div id="scorebox" class="panel" style="z-index:200;">
 				<a id="btn_home" href="#" onclick="return false;">Back</a>
 				<h1>High Score</h1>
-				<div id="scores"></div>
+				<div id="scores"><ul><li>Loading...</li></ul></div>
 			</div>
 			<div id="endgame" class="panel" style="z-index:150;">
 				<h1>Game Over</h1>			

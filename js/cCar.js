@@ -55,10 +55,10 @@ Car.prototype.Move = function() {
 				npCharsPol.splice(0,0,new Police("police", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['police'], tmpStartKey));
 				stage.addChild(npCharsPol[0].actor.sprite);
 			}else if( this.actor.GetPos().x < this.endX ){
-				//this.actor.velocity.x = 4;
+				this.actor.velocity.x = 4;
 			}
 			else if( this.actor.GetPos().x > this.endX ){
-				//this.actor.velocity.x = -4;
+				this.actor.velocity.x = -4;
 			}
 			//if ( (this.actor.GetPos().x >= screen_width - 16) || (this.actor.GetPos().x < 16) ){
 			//	this.actor.velocity.x = -this.actor.velocity.x;

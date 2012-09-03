@@ -88,7 +88,7 @@ if(Modernizr.touch){
 		}
 	});
 	
-	$("#firebuttonn").bind('touchstart', function(){
+	$("#gamecanvas").bind('touchstart', function(){
 		pChars[beamIdx].On();
 		return false;
 	}).bind('touchend', function(){
@@ -244,10 +244,13 @@ function PageInit(){
 	presets.maxPol = 0;
 	
 	tallyMon.abducted = 0;
-	tallyMon.energy = 100;
+	tallyMon.energy = 1;
 	tallyMon.score = 0;
 
 	gameStatus = "start";
+	
+	$('#grp_savescore').show();
+	$('#grp_savedscore').hide();
 	
 	FB.init({appId: FBconfig.app.id, status : true, cookie: true, xfbml : true});
 	SetFrame();
@@ -497,8 +500,8 @@ function tick(){
 		// Add new NPCs
 		///////////////////////////
 		if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
-		if( createjs.Ticker.getTicks() == (startTick+150) || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
-		if( createjs.Ticker.getTicks() == (startTick+500) || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
+		if( createjs.Ticker.getTicks() == (startTick+10) || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
+		if( createjs.Ticker.getTicks() == (startTick+400) || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
 	
 		///////////////////////////
 		// Update the energy bar
