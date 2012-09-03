@@ -95,6 +95,7 @@
 				<h1 id="percent" style="margin-top:0px;"></h1>
 			</div>
 			<div id="start" class="panel" style="z-index:400;">
+				<h1>Main Menu</h1>
 				<ul>
 					<li><a id="btn_start" href="#" onclick="return false;">Start Game</a></li>
 					<li><a id="btn_skip" href="#" onclick="return false;">Skip Instructions</a></li>
@@ -122,18 +123,16 @@
 			</div>
 			<div id="scorebox" class="panel" style="z-index:200;">
 				<a id="btn_home" href="#" onclick="return false;">Back</a>
+				<h1>High Score</h1>
 				<div id="scores"></div>
 			</div>
 			<div id="endgame" class="panel" style="z-index:150;">
-				<h2>Game Over</h2>			
+				<h1>Game Over</h1>			
 				<ul style="margin-top:40px;">
 					<li id="score">Final Score: <span>0</span></li>
-					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save Score</a></li>
-					<li id="grp_savedscore">Score Saved!<br/><a id="btn_viewhighscore" href="#" onclick="return false;">View High Scores</a></li>
-					<li style="margin-top:40px;">Share</li>
-					<li><a id="facebook" href="#">Facebook</a></li>
-					<li><a id="tweeters" href="#">Twitter</a></li>
-					<li><a id="googleplus" href="#">Google+</a></li>
+					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save</a></li>
+					<li id="grp_savedscore">Saved! <a id="btn_viewhighscore" href="#" onclick="return false;">High Scores</a></li>
+					<li style="margin-top:40px;">Share: <a id="facebook" href="#">Fb</a> <a id="tweeters" href="#">Tw</a> <a id="googleplus" href="#">G+</a></li>
 					<li style="margin-top:40px;"><a id="btn_restart" href="#" onclick="return false;">New Game</a></li>
 				</ul>
 			</div>

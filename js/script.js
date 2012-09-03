@@ -186,10 +186,12 @@ $('#btn_savescore').click(function(){
 	if(scorename == "Name"){
 		alert('Enter your name');
 	}else{
+		$('#btn_savescore').hide();
 		$.post("reactor/score/add", { scoreName: scorename, scoreNumber: tallyMon.score }, function(data){
 			//alert("Score Posted!");
 			$('#grp_savescore').hide();
 			$('#grp_savedscore').show();
+			$('#btn_savescore').show();
 		} );
 	}
 });
@@ -320,6 +322,7 @@ function PageInit(){
 		{id:"intro_page_2", src:"assets/intro_pg_2.png"},
 		{id:"intro_page_3", src:"assets/intro_pg_3.png"},
 		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
+		{id:"panel_bkg", src:"assets/panel_bkg.jpg"},
 	];
 
 	preload = new createjs.PreloadJS();
@@ -562,6 +565,7 @@ function EndGame(){
 	gameStatus = "over";
 	DebugOut("Game Over");
 	$('#endgame #score span').html(tallyMon.score);
+	$('#btn_savescore').show();
 	$('#endgame').show();
 }
 
