@@ -24,6 +24,8 @@ function Beam(pName) {
 Beam.prototype.On = function() {
 	this.status = "firing";
 	this.actor.sprite.visible = true;
+	createjs.SoundJS.play("beam_start", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.1);
+	createjs.SoundJS.play("beam_loop", createjs.SoundJS.INTERRUPT_NONE, 0, 0, 1, 0.3);
 }
 
 Beam.prototype.Off = function() {

@@ -312,6 +312,13 @@ function PageInit(){
 		{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
 		{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
 		{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
+		{id:"beam_loop", src:"assets/snd_beam_loop.mp3|assets/snd_beam_loop.wav"},
+		{id:"beam_start", src:"assets/snd_beam_start.mp3|assets/snd_beam_start.wav"},
+		{id:"pistol", src:"assets/snd_pistol.mp3|assets/snd_pistol.wav"},
+		{id:"police_siren", src:"assets/snd_police_siren.mp3|assets/snd_police_siren.wav"},
+		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav"},
+		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav"},
+		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav"},
 		{id:"ship", src:"assets/anim_ship_spin.png"},
 		{id:"civilian", src:"assets/civilian.png"},
 		{id:"military", src:"assets/military.png"},
@@ -523,6 +530,14 @@ function HandleNPChars(pArr, pIdx){
 			
 			bulletz.push(new Bullet(pArr[pIdx].actor.GetPos(), {'x':(-10*vS),'y':(-10)}, pArr[pIdx].dmgBullet));
 			stage.addChild(bulletz[bulletz.length-1].actor.sprite);
+			
+			if( pArr[pIdx].actor.type == "police" ){
+				createjs.SoundJS.play("pistol", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.2);
+			}else if( pArr[pIdx].actor.type == "military" ){
+				createjs.SoundJS.play("rocket", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.2);
+			}
+			
+			
 			if(pArr[pIdx].actor.GetPos().x < pChars[shipIdx].actor.sprite.x){
 				pArr[pIdx].actor.sprite.gotoAndPlay("fire_h");	
 			}else{
@@ -596,6 +611,8 @@ function Respawn(pArr, pType){
 			//stage.addChild(npCharsPol[0].actor.sprite);
 			npCharsPol.splice(0,0,new Car("car", tmpStartPos, screen_height-presets.ground, tmpEndPos, images['car'], tmpStartKey));
 			stage.addChild(npCharsPol[0].actor.sprite);
+			
+			createjs.SoundJS.play("police_siren", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.2);
 			break;
 		case "mil":
 			var tmpStartPos = -(Math.floor(Math.random()*(screen_width/4)));
@@ -627,6 +644,7 @@ function Abduct(pArr, pIdx){
 			tallyMon.score += (presets.abductVal*multiplierTraq);
 			DebugOut(tallyMon.abducted);
 			$('#abducted span').html(tallyMon.abducted);
+			createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, (multiplierTraq/10));
 			if(multiplierTraq > 1){
 				pChars.push(new Anno(multiplierTraq));
 				stage.addChild(pChars[pChars.length-1].actor.sprite);

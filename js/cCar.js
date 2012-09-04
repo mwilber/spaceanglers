@@ -84,6 +84,7 @@ Car.prototype.Move = function() {
 			this.actor.velocity.x = 0;
 			this.actor.sprite.y = screen_height-presets.ground;
 			this.actor.sprite.gotoAndPlay("splat");
+			createjs.SoundJS.play("car_splat", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
 			// Create the energy bonus
 			npCharsPol.splice(0,0,new Energy("energy", this.actor.GetPos().x, screen_height-presets.ground, images['energy']));
 			stage.addChild(npCharsPol[0].actor.sprite);	
