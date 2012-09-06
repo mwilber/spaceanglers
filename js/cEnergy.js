@@ -64,6 +64,13 @@ Energy.prototype.Move = function() {
 	
 }
 
+Energy.prototype.Splat = function(){
+	this.actor.status = "splat";
+	this.actor.velocity.y = 0;
+	this.actor.velocity.x = 0;
+	this.actor.sprite.visible = false;
+}
+
 Energy.prototype.SetStatus = function(pStatus) {
 	
 	this.actor.status = pStatus;

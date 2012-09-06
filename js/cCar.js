@@ -14,7 +14,7 @@ function Car(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 117, "width": 182, "count": 10, "regY": 10, "height": 70}
+			{"regX": 91, "width": 182, "count": 10, "regY": 10, "height": 70}
 		},
 		"position":{
 			"x":pStartX,
@@ -24,7 +24,7 @@ function Car(pName, pStartX, pStartY, pEndX, pImg, pStartKey) {
 			"x":4,
 			"y":0
 		},
-		"radius":20
+		"radius":60
 	});
 	
 	this.startX = pStartX;
@@ -78,13 +78,27 @@ Car.prototype.Move = function() {
 		//this.velocity.y *= 1.5;
 		this.actor.velocity.y += 1;
 	}else{
-		if(this.actor.status == "stun" && this.actor.velocity.y > 20){
-			this.actor.status = "splat";
-			this.actor.velocity.y = 0;
-			this.actor.velocity.x = 0;
-			this.actor.sprite.y = screen_height-presets.ground;
-			this.actor.sprite.gotoAndPlay("splat");
-			createjs.SoundJS.play("car_splat", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
+		if(this.actor.status == "stun" && this.actor.velocity.y > presets.splatV){
+
+			// See if the car takes out anyone else
+			for( idx in npCharsCiv ){
+				if(this.actor.hitRadius(npCharsCiv[idx].actor.sprite.x, npCharsCiv[idx].actor.sprite.y, this.actor.hit)){
+					npCharsCiv[idx].Splat();
+				}
+			}
+			for( idx in npCharsMil ){
+				if(this.actor.hitRadius(npCharsMil[idx].actor.sprite.x, npCharsMil[idx].actor.sprite.y, this.actor.hit)){
+					npCharsMil[idx].Splat();
+				}
+			}
+			for( idx in npCharsPol ){
+				if(this.actor.hitRadius(npCharsPol[idx].actor.sprite.x, npCharsPol[idx].actor.sprite.y, this.actor.hit)){
+					npCharsPol[idx].Splat();
+				}
+			}
+			
+			this.Splat();
+			
 			// Create the energy bonus
 			npCharsPol.splice(0,0,new Energy("energy", this.actor.GetPos().x, screen_height-presets.ground, images['energy']));
 			stage.addChild(npCharsPol[0].actor.sprite);	
@@ -99,6 +113,15 @@ Car.prototype.Move = function() {
 
 	this.actor.UpdatePos();
 	
+}
+
+Car.prototype.Splat = function() {
+	this.actor.status = "splat";
+	this.actor.velocity.y = 0;
+	this.actor.velocity.x = 0;
+	this.actor.sprite.y = screen_height-presets.ground;
+	this.actor.sprite.gotoAndPlay("splat");
+	createjs.SoundJS.play("car_splat", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
 }
 
 Car.prototype.SetStatus = function(pStatus) {

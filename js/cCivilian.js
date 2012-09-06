@@ -50,14 +50,12 @@ Civilian.prototype.Move = function() {
 	if(this.actor.sprite.y+this.actor.velocity.y < screen_height-presets.ground){
 		//this.velocity.y *= 1.5;
 		this.actor.velocity.y += 1;
+		if( this.actor.sprite.y < (screen_height-presets.ground-150) && this.actor.velocity.y == 1 ){
+			createjs.SoundJS.play("scream", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
+		}
 	}else{
-		if(this.actor.status == "stun" && this.actor.velocity.y > 20){
-			this.actor.status = "splat";
-			this.actor.velocity.y = 0;
-			this.actor.velocity.x = 0;
-			this.actor.sprite.y = screen_height-presets.ground;
-			this.actor.sprite.gotoAndPlay("splat");
-			createjs.SoundJS.play("splat", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
+		if(this.actor.status == "stun" && this.actor.velocity.y > presets.splatV){
+			this.Splat();
 		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
 			this.actor.status = "walk";
 			this.actor.sprite.gotoAndPlay("walk_h");
@@ -69,6 +67,15 @@ Civilian.prototype.Move = function() {
 
 	this.actor.UpdatePos();
 	
+}
+
+Civilian.prototype.Splat = function(){
+	this.actor.status = "splat";
+	this.actor.velocity.y = 0;
+	this.actor.velocity.x = 0;
+	this.actor.sprite.y = screen_height-presets.ground;
+	this.actor.sprite.gotoAndPlay("splat");
+	createjs.SoundJS.play("splat", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.5);
 }
 
 Civilian.prototype.SetStatus = function(pStatus) {

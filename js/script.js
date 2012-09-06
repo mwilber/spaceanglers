@@ -43,7 +43,8 @@ var presets = {
 	drainCiv: 0.05,
 	accelerometerSensitivity:10,
 	accelerometerYOffset:7,
-	nrgGainCar:50
+	nrgGainCar:50,
+	splatV:16,
 };
 var tallyMon = {
 	"abducted": 0,
@@ -319,6 +320,11 @@ function PageInit(){
 		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav"},
 		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav"},
 		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav"},
+		{id:"scream", src:"assets/snd_scream.mp3|assets/snd_scream.wav"},
+		{id:"energy", src:"assets/snd_energy.mp3|assets/snd_energy.wav"},
+		{id:"hit", src:"assets/snd_hit.mp3|assets/snd_hit.wav"},
+		{id:"coin", src:"assets/snd_coin.mp3|assets/snd_coin.wav"},
+		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav"},
 		{id:"ship", src:"assets/anim_ship_spin.png"},
 		{id:"civilian", src:"assets/civilian.png"},
 		{id:"military", src:"assets/military.png"},
@@ -355,7 +361,7 @@ function DoneLoading(event) {
 	$('#loading').hide();
 	//$('.panel').hide();
 	//$('#endgame').show();
-
+	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.4);
 }
 
 function HandleLoadProgress(event){
@@ -383,6 +389,8 @@ function HandleImageError(e) {
 
 function InitGame(){
 	
+	createjs.SoundJS.stop();
+	
 	stage.clear();
 	
 	mousePos.x = screen_width/2;
@@ -396,7 +404,10 @@ function InitGame(){
 
 function StartGame(){
 	
-	DebugOut("-- START GAME --")
+	DebugOut("-- START GAME --");
+	
+	createjs.SoundJS.play("coin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
+	
 	for( idx=0; idx<(presets.maxCiv); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		npCharsCiv.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
@@ -480,6 +491,7 @@ function tick(){
 				Disarm(idx);
 			}else if(pChars[shipIdx].actor.hitRadius(bulletz[idx].actor.sprite.x, bulletz[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
 				EnergyUpdate(-bulletz[idx].damage);
+				createjs.SoundJS.play("hit", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 				Disarm(idx);
 			}
 		}
@@ -570,6 +582,11 @@ function HandleNPChars(pArr, pIdx){
 	}else{
 		Decay(pArr, pIdx);
 	}
+	
+	if(  pArr[pIdx].actor.type == "energy" ){
+		Decay(pArr, pIdx);
+	}
+	
 	return resetBeam;
 }
 
@@ -652,6 +669,7 @@ function Abduct(pArr, pIdx){
 		}
 		if(pArr[pIdx].actor.type == "energy"){
 			EnergyUpdate(presets.nrgGainCar);
+			createjs.SoundJS.play("energy", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 		}
 	}
 }
