@@ -39,7 +39,7 @@ var presets = {
 	srPol: 30,
 	abductVal: 100,
 	fps: 24,
-	freqBullet: 20,
+	freqBullet: 15,
 	drainCiv: 0.05,
 	accelerometerSensitivity:10,
 	accelerometerYOffset:7,
@@ -53,11 +53,64 @@ var tallyMon = {
 }
 var gameStatus = "start";
 
+var manifest = [
+		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
+		{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
+		{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
+		{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
+		{id:"beam_loop", src:"assets/snd_beam_loop.mp3|assets/snd_beam_loop.wav"},
+		{id:"beam_start", src:"assets/snd_beam_start.mp3|assets/snd_beam_start.wav"},
+		{id:"pistol", src:"assets/snd_pistol.mp3|assets/snd_pistol.wav"},
+		{id:"police_siren", src:"assets/snd_police_siren.mp3|assets/snd_police_siren.wav"},
+		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav"},
+		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav"},
+		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav"},
+		{id:"scream", src:"assets/snd_scream.mp3|assets/snd_scream.wav"},
+		{id:"energy", src:"assets/snd_energy.mp3|assets/snd_energy.wav"},
+		{id:"hit", src:"assets/snd_hit.mp3|assets/snd_hit.wav"},
+		{id:"coin", src:"assets/snd_coin.mp3|assets/snd_coin.wav"},
+		{id:"energy_plop", src:"assets/snd_energy_plop.mp3|assets/snd_energy_plop.wav"},
+		{id:"abduct", src:"assets/snd_abduct.mp3|assets/snd_abduct.wav"},
+		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav"},
+		{id:"ship", src:"assets/anim_ship_spin.png"},
+		{id:"civilian", src:"assets/civilian.png"},
+		{id:"military", src:"assets/military.png"},
+		{id:"police", src:"assets/police.png"},
+		{id:"car", src:"assets/car.png"},
+		{id:"energy", src:"assets/energy.png"},
+		{id:"starfield_blue", src:"images/starfield_blue.png"},
+		{id:"ground", src:"assets/ground.png"},
+		{id:"starfield", src:"assets/sky.png"},
+		{id:"intro_page_1", src:"assets/intro_pg_1.png"},
+		{id:"intro_page_2", src:"assets/intro_pg_2.png"},
+		{id:"intro_page_3", src:"assets/intro_pg_3.png"},
+		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
+		{id:"panel_bkg", src:"assets/panel_bkg.jpg"},
+		{id:"panel_bkg_blank", src:"assets/panel_bkg_blank.jpg"},
+		{id:"share_fb", src:"assets/share_fb.png"},
+		{id:"share_tw", src:"assets/share_tw.png"},
+		{id:"share_gp", src:"assets/share_gp.png"},
+	];
+
 /////////////////////////////////////////////////////////////////////////////
 //	Event Handlers
 /////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function(){
+	
+	createjs.FlashPlugin.BASE_PATH = "../src/soundjs/" // Initialize the base path from this document to the Flash Plugin
+	if (!createjs.SoundJS.checkPlugin(true)) {
+		//alert('No Sound Support');
+		//document.getElementById("main").style.display = "none";
+		//return;
+	}
+	
+	// begin loading content (only sounds to load)
+	preload = new createjs.PreloadJS();
+	preload.onComplete = DoneLoading;
+	preload.onProgress = HandleLoadProgress;
+	preload.installPlugin(createjs.SoundJS);
+	preload.loadManifest(manifest);
 	
 	PageInit();
 
@@ -221,12 +274,8 @@ $('#googleplus').click(function(){
 
 function PageInit(){
 	
-	createjs.FlashPlugin.BASE_PATH = "../src/soundjs/" // Initialize the base path from this document to the Flash Plugin
-	if (!createjs.SoundJS.checkPlugin(true)) {
-		//alert('No Sound Support');
-		//document.getElementById("main").style.display = "none";
-		//return;
-	}
+	createjs.SoundJS.stop();
+	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.4);
 	
 	images = new Array();
 	numberOfImagesLoaded = 0;
@@ -306,54 +355,10 @@ function PageInit(){
 	
 	// create a new stage and point it at our canvas:
 	stage = new createjs.Stage(document.getElementById("gamecanvas"));
-	
-	// begin loading content (only sounds to load)
-	var manifest = [
-		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
-		{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
-		{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
-		{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
-		{id:"beam_loop", src:"assets/snd_beam_loop.mp3|assets/snd_beam_loop.wav"},
-		{id:"beam_start", src:"assets/snd_beam_start.mp3|assets/snd_beam_start.wav"},
-		{id:"pistol", src:"assets/snd_pistol.mp3|assets/snd_pistol.wav"},
-		{id:"police_siren", src:"assets/snd_police_siren.mp3|assets/snd_police_siren.wav"},
-		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav"},
-		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav"},
-		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav"},
-		{id:"scream", src:"assets/snd_scream.mp3|assets/snd_scream.wav"},
-		{id:"energy", src:"assets/snd_energy.mp3|assets/snd_energy.wav"},
-		{id:"hit", src:"assets/snd_hit.mp3|assets/snd_hit.wav"},
-		{id:"coin", src:"assets/snd_coin.mp3|assets/snd_coin.wav"},
-		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav"},
-		{id:"ship", src:"assets/anim_ship_spin.png"},
-		{id:"civilian", src:"assets/civilian.png"},
-		{id:"military", src:"assets/military.png"},
-		{id:"police", src:"assets/police.png"},
-		{id:"car", src:"assets/car.png"},
-		{id:"energy", src:"assets/energy.png"},
-		{id:"starfield_blue", src:"images/starfield_blue.png"},
-		{id:"ground", src:"assets/ground.png"},
-		{id:"starfield", src:"assets/sky.png"},
-		{id:"intro_page_1", src:"assets/intro_pg_1.png"},
-		{id:"intro_page_2", src:"assets/intro_pg_2.png"},
-		{id:"intro_page_3", src:"assets/intro_pg_3.png"},
-		{id:"intro_page_4", src:"assets/intro_pg_4.png"},
-		{id:"panel_bkg", src:"assets/panel_bkg.jpg"},
-		{id:"panel_bkg_blank", src:"assets/panel_bkg_blank.jpg"},
-		{id:"share_fb", src:"assets/share_fb.png"},
-		{id:"share_tw", src:"assets/share_tw.png"},
-		{id:"share_gp", src:"assets/share_gp.png"},
-	];
-
-	preload = new createjs.PreloadJS();
-	preload.onComplete = DoneLoading;
-	preload.onProgress = HandleLoadProgress;
-	preload.installPlugin(createjs.SoundJS);
-	preload.loadManifest(manifest);
 }
 
 function DoneLoading(event) {
-
+	
 	// start the music
 	createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 	//SoundInstance play ( value , interrupt 					, delay , offset , loop , volume , pan )
@@ -361,7 +366,6 @@ function DoneLoading(event) {
 	$('#loading').hide();
 	//$('.panel').hide();
 	//$('#endgame').show();
-	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.4);
 }
 
 function HandleLoadProgress(event){
@@ -398,6 +402,8 @@ function InitGame(){
 	
 	createjs.Ticker.setFPS(presets.fps);
 	createjs.Ticker.addListener(window);
+	
+	$('#energybar').removeClass('white');
 	
 	StartGame();
 }
@@ -602,6 +608,7 @@ function EnergyUpdate(pVal){
 
 function EndGame(){
 	gameStatus = "over";
+	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.2);
 	DebugOut("Game Over");
 	$('#endgame #score span').html(tallyMon.score);
 	$('#btn_savescore').show();
@@ -661,7 +668,9 @@ function Abduct(pArr, pIdx){
 			tallyMon.score += (presets.abductVal*multiplierTraq);
 			DebugOut(tallyMon.abducted);
 			$('#abducted span').html(tallyMon.abducted);
-			createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, (multiplierTraq/10));
+			var aVol = (multiplierTraq/10);
+			if(aVol > 1) aVol = 1;
+			createjs.SoundJS.play("abduct", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, aVol);
 			if(multiplierTraq > 1){
 				pChars.push(new Anno(multiplierTraq));
 				stage.addChild(pChars[pChars.length-1].actor.sprite);
@@ -669,7 +678,7 @@ function Abduct(pArr, pIdx){
 		}
 		if(pArr[pIdx].actor.type == "energy"){
 			EnergyUpdate(presets.nrgGainCar);
-			createjs.SoundJS.play("energy", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
+			createjs.SoundJS.play("coin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 		}
 	}
 }

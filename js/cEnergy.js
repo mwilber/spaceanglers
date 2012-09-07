@@ -51,6 +51,7 @@ Energy.prototype.Move = function() {
 			this.actor.velocity.x = 0;
 			this.actor.sprite.y = screen_height-presets.ground;
 			this.actor.sprite.gotoAndPlay("splat");
+			createjs.SoundJS.play("energy_plop", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 1);
 		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
 			this.actor.status = "walk";
 			this.actor.sprite.gotoAndPlay("walk_h");
