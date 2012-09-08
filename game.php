@@ -1,6 +1,6 @@
 <?php
-	$SHARE_DESCRIPTION = "An HTML5 Canvas video game by GreenZeta.";
-	$SHARE_TITLE = "Space Anglers";
+	$SHARE_DESCRIPTION = "Join the Space Anglers tournament and compete for the highest score! Grab as many humans as you can before your energy runs out. Space Anglers, a GreenZeta production, is an HTML5 canvas experiment using the CreateJS library.";
+	$SHARE_TITLE = "SPACE ANGLERS";
 	if(isset($_GET['score'])){
 		$SHARE_TITLE = "I scored ".$_GET['score']." on Space Anglers!";
 	}
@@ -133,7 +133,7 @@
 					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save</a></li>
 					<li id="grp_savedscore">Saved! <a id="btn_viewhighscore" href="#" onclick="return false;">High Scores</a></li>
 					<li style="margin-top:40px;">Share: <a id="facebook" href="#"><img src="assets/share_fb.png"/></a> <a id="tweeters" href="#"><img src="assets/share_tw.png"/></a> <a id="googleplus" href="#"><img src="assets/share_gp.png"/></a></li>
-					<li style="margin-top:40px;"><a id="btn_restart" href="#" onclick="return false;">New Game</a></li>
+					<li style="margin-top:40px;"><a id="btn_restart" href="#" onclick="return false;">Main Menu ></a></li>
 				</ul>
 			</div>
 			<div id="hud" style="z-index: 110;">
