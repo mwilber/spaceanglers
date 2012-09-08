@@ -105,14 +105,18 @@ $(document).ready(function(){
 		//return;
 	}
 	
+	PagePreInit();
+
+});
+
+function PagePreInit(){
 	// begin loading content (only sounds to load)
 	preload = new createjs.PreloadJS();
 	preload.onComplete = DoneLoading;
 	preload.onProgress = HandleLoadProgress;
 	preload.installPlugin(createjs.SoundJS);
 	preload.loadManifest(manifest);
-
-});
+}
 
 
 if(Modernizr.touch){
@@ -216,6 +220,7 @@ $('#btn_highscore').click(function(){
 });
 
 $('#btn_viewhighscore').click(function(){
+	PageInit();
 	$('.panel').hide();
 	$('#scorebox').show();
 	$('#scorebox #scores').load('reactor/score/topten');
@@ -260,7 +265,7 @@ $('#tweeters').click(function(){
 });
 
 $('#googleplus').click(function(){
-	var url = "https://plus.google.com/share?url="+escape(social['link']+"game.php?score="+tallyMon.score);
+	var url = "https://plus.google.com/share?url="+escape(social['link']+"?score="+tallyMon.score);
 	openpopup(url,'gplus',550,450);
 	return false;
 });

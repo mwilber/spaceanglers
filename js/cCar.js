@@ -104,8 +104,8 @@ Car.prototype.Move = function() {
 			stage.addChild(npCharsPol[0].actor.sprite);	
 			createjs.SoundJS.play("begin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 		}else if(this.actor.status == "stun" && this.actor.velocity.y > 1){
-			this.actor.status = "walk";
-			this.actor.sprite.gotoAndPlay("walk_h");
+			this.actor.status = "wait";
+			//this.actor.sprite.gotoAndPlay("walk_h");
 			this.actor.velocity.y = 0;
 			this.actor.velocity.x = 0;
 			this.actor.sprite.y = screen_height-presets.ground;
