@@ -111,8 +111,6 @@ $(document).ready(function(){
 	preload.onProgress = HandleLoadProgress;
 	preload.installPlugin(createjs.SoundJS);
 	preload.loadManifest(manifest);
-	
-	PageInit();
 
 });
 
@@ -366,6 +364,7 @@ function DoneLoading(event) {
 	$('#loading').hide();
 	//$('.panel').hide();
 	//$('#endgame').show();
+	PageInit();
 }
 
 function HandleLoadProgress(event){
