@@ -293,6 +293,24 @@ li{
 	padding-top:50px;
 }
 
+#checklist h1{
+	text-align:center;
+	margin:20px;
+	font-size:20px;
+}
+
+#checklist ul#supported{
+	margin: 50px 0px 50px 200px;
+}
+
+#checklist ul#supported li{
+	display:none;
+}
+
+#checklist a{
+	font-size:20px;
+}
+
 #loading h1{
 	text-align:center;
 	margin-left:0px;
@@ -332,7 +350,7 @@ li{
 	margin-top:25px;
 }
 
-#loading, #intro{
+#loading, #intro, #checklist{
 	background-image:url('../assets/panel_bkg_blank.jpg');
 }
 

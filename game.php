@@ -77,7 +77,7 @@
 	<script type="text/javascript" src="js/libs/soundjs/FlashPlugin.js"></script>
 
 
-	<script src="js/libs/modernizr-2.0.6.min.js"></script>
+	<script src="js/libs/modernizr.custom.35563.js"></script>
 	
 	<script type="text/javascript" src="js/fbconfig.js"></script>
 	
@@ -90,6 +90,15 @@
 	</header>
 	<div id="main" role="main">
 		<div id="canvasbkg">
+			<div id="checklist" class="panel" style="z-index:600;">
+				<h1>The following features are not supported in this browser:</h1>
+				<ul id="supported">
+					<li id="canvas">X&nbsp;&nbsp;HTML5 Canvas</li>
+					<li id="sound">X&nbsp;&nbsp;Sound</li>
+					<li id="motion">X&nbsp;&nbsp;Motion/Touch Controls<br/>&nbsp;&nbsp;&nbsp;(iPad/iPhone only)</li>
+				</ul>
+				<a id="btn_proceed" href="#" onclick="return false;">Continue Anyway</a>
+			</div>
 			<div id="loading" class="panel" style="z-index:500;">
 				<h1>Loading...</h1>
 				<h1 id="percent" style="margin-top:0px;"></h1>

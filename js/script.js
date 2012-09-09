@@ -52,6 +52,7 @@ var tallyMon = {
 	"score": 0
 }
 var gameStatus = "start";
+var skipChecklist = true;
 
 var manifest = [
 		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
@@ -103,9 +104,24 @@ $(document).ready(function(){
 		//alert('No Sound Support');
 		//document.getElementById("main").style.display = "none";
 		//return;
+		skipChecklist = false;
+		$('#checklist #supported #sound').show();
 	}
 	
-	PagePreInit();
+	if (!Modernizr.canvas) {
+		skipChecklist = false;
+		$('#checklist #supported #canvas').show();
+	}
+	
+	if (Modernizr.touce && !Modernizr.devicemotion) {
+		skipChecklist = false;
+		$('#checklist #supported #motion').show();
+	}
+	
+	if( skipChecklist ){
+		$('#checklist').hide();
+		PagePreInit();
+	}
 
 });
 
@@ -196,6 +212,11 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 		DebugOut('user does not like target');
 		window.location = FBconfig.likegate.gatepage;
 	}
+});
+
+$('#btn_proceed').click(function(){
+	$('#checklist').hide();
+	PagePreInit();
 });
 
 $('#btn_skip').click(function(){
