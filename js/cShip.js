@@ -9,17 +9,12 @@ function Ship(pName, pImg) {
 		"spritesheet":{
 			"animations":
 			{
-				"spin": [0, 5, "spin"]
+				"spin": [0, 9, "spin"],
+				"warp": [10, 58, ""]
 			},
 			"images": [pImg],
 			"frames":
-			{
-				"regX": 100,
-				"regY": 31,
-				"height": 63,
-				"width":191.8333,
-				"count": 6
-			}
+			{"regX": 97, "width": 195, "count": 59, "regY": 50, "height": 175}
 		},
 		"position":{
 			"x":0,
@@ -29,7 +24,7 @@ function Ship(pName, pImg) {
 			"x":0,
 			"y":0
 		},
-		"radius":25
+		"radius":40
 	});
 }
 

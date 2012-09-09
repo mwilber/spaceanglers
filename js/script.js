@@ -27,7 +27,7 @@ var presets = {
 	g: 0.2,			// Gravity
 	beampwr: 5,		// speed beam lifts actors
 	ground: 70,		// y distance from bottom actors are spawned
-	ceiling: 150,	// min height ship can reach
+	ceiling: 100,	// min height ship can reach
 	lastlevel: 3, 	// # represents array idx
 	dmgDrain: 0.005,
 	dmgShell: 10,
@@ -54,6 +54,7 @@ var tallyMon = {
 var gameStatus = "start";
 var skipChecklist = true;
 var upsideDown = false;
+var endTimer = 0;
 
 var manifest = [
 		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
@@ -76,7 +77,7 @@ var manifest = [
 		{id:"abduct", src:"assets/snd_abduct.mp3|assets/snd_abduct.wav|assets/snd_abduct.ogg"},
 		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav|assets/snd_music_intro.ogg"},
 		
-		{id:"ship", src:"assets/anim_ship_spin.png"},
+		{id:"ship", src:"assets/ship.png"},
 		{id:"civilian", src:"assets/civilian.png"},
 		{id:"military", src:"assets/military.png"},
 		{id:"police", src:"assets/police.png"},
@@ -335,10 +336,11 @@ function PageInit(){
 	presets.maxPol = 0;
 	
 	tallyMon.abducted = 0;
-	tallyMon.energy = 100;
+	tallyMon.energy = 10;
 	tallyMon.score = 0;
 
 	gameStatus = "start";
+	endTimer = 0;
 	
 	$('#grp_savescore').show();
 	$('#grp_savedscore').hide();
@@ -363,7 +365,7 @@ function PageInit(){
 	images['ship'] = new Image();
 	//images['ship'].onload = HandleImageLoad;
 	//images['ship'].onerror = HandleImageError;
-	images['ship'].src = "assets/anim_ship_spin.png";
+	images['ship'].src = "assets/ship.png";
 	images['civilian'] = new Image();
 	//images['civilian'].onload = HandleImageLoad;
 	//images['civilian'].onerror = HandleImageError;
@@ -503,81 +505,88 @@ function StartGame(){
 }
 
 function tick(){
-	if( gameStatus != "over" ){
-		
-		///////////////////////////
-		// Handle the Player Characters
-		///////////////////////////
-		for( idx in pChars ){
-			pChars[idx].Move();
-			if( pChars[idx].actor.type == "anno" ) Decay(pChars, idx);
-		}
-		
-		///////////////////////////
-		// Handle the Non-Player Characters
-		///////////////////////////
-		var doBeamReset = true;
-		for( idx in npCharsCiv ){
-			if( !HandleNPChars(npCharsCiv, idx) ) doBeamReset=false;
-		}
-		for( idx in npCharsMil ){
-			if( !HandleNPChars(npCharsMil, idx) ) doBeamReset=false;
-		}
-		for( idx in npCharsPol ){
-			if( !HandleNPChars(npCharsPol, idx) ) doBeamReset=false;
-		}
-		if( doBeamReset ){
-			pChars[beamIdx].charIdx = -1;
-		}
-		
-		///////////////////////////
-		// Handle de bulletz
-		///////////////////////////
-		for( idx in bulletz ){
-			bulletz[idx].Move();
-			if(bulletz[idx].actor.sprite.y < 0 || bulletz[idx].actor.sprite.x < 0 || bulletz[idx].actor.sprite.x > screen_width){
-				Disarm(idx);
-			}else if(pChars[shipIdx].actor.hitRadius(bulletz[idx].actor.sprite.x, bulletz[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
-				EnergyUpdate(-bulletz[idx].damage);
-				createjs.SoundJS.play("hit", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
-				Disarm(idx);
+	if( gameStatus != "over" || (endTimer > 0 && createjs.Ticker.getTicks() < (endTimer+60)) ){
+		//if( gameStatus != "over" ){
+			///////////////////////////
+			// Handle the Player Characters
+			///////////////////////////
+			
+			for( idx in pChars ){
+				pChars[idx].Move();
+				if( pChars[idx].actor.type == "anno" ) Decay(pChars, idx);
 			}
-		}
 		
-		///////////////////////////
-		// Respawn
-		///////////////////////////
-		if( npCharsCiv.length < presets.maxCiv ){
-			Respawn(npCharsCiv, "civ");
-		}
-		if( npCharsPol.length < presets.maxPol ){
-			Respawn(npCharsPol, "pol");
-		}
-		if( npCharsMil.length < presets.maxMil ){
-			Respawn(npCharsMil, "mil");
-		}
-		EnergyUpdate(-presets.dmgDrain);
+			///////////////////////////
+			// Handle the Non-Player Characters
+			///////////////////////////
+			var doBeamReset = true;
+			for( idx in npCharsCiv ){
+				if( !HandleNPChars(npCharsCiv, idx) ) doBeamReset=false;
+			}
+			for( idx in npCharsMil ){
+				if( !HandleNPChars(npCharsMil, idx) ) doBeamReset=false;
+			}
+			for( idx in npCharsPol ){
+				if( !HandleNPChars(npCharsPol, idx) ) doBeamReset=false;
+			}
+			if( doBeamReset ){
+				pChars[beamIdx].charIdx = -1;
+			}
+			
+			///////////////////////////
+			// Handle de bulletz
+			///////////////////////////
+			for( idx in bulletz ){
+				bulletz[idx].Move();
+				if(bulletz[idx].actor.sprite.y < 0 || bulletz[idx].actor.sprite.x < 0 || bulletz[idx].actor.sprite.x > screen_width){
+					Disarm(idx);
+				}else if(pChars[shipIdx].actor.hitRadius(bulletz[idx].actor.sprite.x, bulletz[idx].actor.sprite.y, pChars[shipIdx].actor.hit)){
+					EnergyUpdate(-bulletz[idx].damage);
+					createjs.SoundJS.play("hit", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
+					Disarm(idx);
+				}
+			}
+			
+			///////////////////////////
+			// Respawn
+			///////////////////////////
+			if( npCharsCiv.length < presets.maxCiv ){
+				Respawn(npCharsCiv, "civ");
+			}
+			if( npCharsPol.length < presets.maxPol ){
+				Respawn(npCharsPol, "pol");
+			}
+			if( npCharsMil.length < presets.maxMil ){
+				Respawn(npCharsMil, "mil");
+			}
+			EnergyUpdate(-presets.dmgDrain);
+			
+			///////////////////////////
+			// Add new NPCs
+			///////////////////////////
+			if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
+			if( createjs.Ticker.getTicks() == (startTick+10) || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
+			if( createjs.Ticker.getTicks() == (startTick+400) || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
 		
-		///////////////////////////
-		// Redraw canvas
-		///////////////////////////
-		stage.update();
+			///////////////////////////
+			// Update the energy bar
+			///////////////////////////
+			$('#energybar').css('width',(tallyMon.energy*3)+"px");
+			if( tallyMon.energy < 25 ){
+				if( createjs.Ticker.getTicks() % (presets.fps/2) == 0) $('#energybar').toggleClass('white');
+			}
 		
-		///////////////////////////
-		// Add new NPCs
-		///////////////////////////
-		if( createjs.Ticker.getTicks() % (presets.srCiv*presets.fps) == 0) presets.maxCiv++;
-		if( createjs.Ticker.getTicks() == (startTick+10) || (createjs.Ticker.getTicks() % (presets.srPol*presets.fps) == 0)) presets.maxPol++;
-		if( createjs.Ticker.getTicks() == (startTick+400) || (createjs.Ticker.getTicks() % (presets.srMil*presets.fps) == 0)) presets.maxMil++;
-	
-		///////////////////////////
-		// Update the energy bar
-		///////////////////////////
-		$('#energybar').css('width',(tallyMon.energy*3)+"px");
-		if( tallyMon.energy < 25 ){
-			if( createjs.Ticker.getTicks() % (presets.fps/2) == 0) $('#energybar').toggleClass('white');
-		}
+		//}
+	}else if(endTimer == 0){
+		endTimer = createjs.Ticker.getTicks();
+	}else if(endTimer > 0){
+		endTimer = -1;
+		EndGame();
 	}
+	///////////////////////////
+	// Redraw canvas
+	///////////////////////////
+	stage.update();
 }
 
 function HandleNPChars(pArr, pIdx){
@@ -643,13 +652,19 @@ function EnergyUpdate(pVal){
 	if(tallyMon.energy < 1) tallyMon.energy = 0;
 	if(tallyMon.energy > 100) tallyMon.energy = 100;
 	$('#energy span').html(Math.floor(tallyMon.energy)+"%");
-	if( tallyMon.energy <= 0 ){
-		EndGame();
+	if( tallyMon.energy <= 0 && endTimer == 0 ){
+		WarpOut();
 	}
 }
 
-function EndGame(){
+function WarpOut(){
+	
+	pChars[beamIdx].Off();
 	gameStatus = "over";
+	pChars[shipIdx].actor.sprite.gotoAndPlay("warp");
+}
+
+function EndGame(){
 	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.2);
 	DebugOut("Game Over");
 	$('#endgame #score span').html(tallyMon.score);

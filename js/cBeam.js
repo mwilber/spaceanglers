@@ -38,7 +38,7 @@ Beam.prototype.Move = function() {
 	var shipX = pChars[shipIdx].actor.sprite.x;
 	//shipX += pChars[shipIdx].actor.width/2;
 	var shipY = pChars[shipIdx].actor.sprite.y;
-	shipY -= 20;
+	shipY += 10;
 	
 	// Do not let the ship fly lower than the ceiling
     if(mousePos.y > screen_height-presets.ceiling){
