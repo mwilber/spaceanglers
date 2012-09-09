@@ -59,7 +59,7 @@ Beam.prototype.hitTest = function( pPos ) {
 	var lBound = this.actor.sprite.x - 30;
 	var rBound = this.actor.sprite.x + 30;
 	
-	if( pPos.x > lBound && pPos.x < rBound ){
+	if( pPos.x > lBound && pPos.x < rBound && pPos.y > pChars[shipIdx].actor.sprite.y ){
 		return true;
 	}else{
 		return false;
