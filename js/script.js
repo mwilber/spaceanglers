@@ -53,26 +53,29 @@ var tallyMon = {
 }
 var gameStatus = "start";
 var skipChecklist = true;
+var upsideDown = false;
 
 var manifest = [
 		{id:"begin", src:"assets/Game-Spawn.mp3|assets/Game-Spawn.ogg"},
 		{id:"break", src:"assets/Game-Break.mp3|assets/Game-Break.ogg", data:6},
 		{id:"death", src:"assets/Game-Death.mp3|assets/Game-Death.ogg"},
 		{id:"laser", src:"assets/Game-Shot.mp3|assets/Game-Shot.ogg", data:6},
-		{id:"beam_loop", src:"assets/snd_beam_loop.mp3|assets/snd_beam_loop.wav"},
-		{id:"beam_start", src:"assets/snd_beam_start.mp3|assets/snd_beam_start.wav"},
-		{id:"pistol", src:"assets/snd_pistol.mp3|assets/snd_pistol.wav"},
-		{id:"police_siren", src:"assets/snd_police_siren.mp3|assets/snd_police_siren.wav"},
-		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav"},
-		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav"},
-		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav"},
-		{id:"scream", src:"assets/snd_scream.mp3|assets/snd_scream.wav"},
-		{id:"energy", src:"assets/snd_energy.mp3|assets/snd_energy.wav"},
-		{id:"hit", src:"assets/snd_hit.mp3|assets/snd_hit.wav"},
-		{id:"coin", src:"assets/snd_coin.mp3|assets/snd_coin.wav"},
-		{id:"energy_plop", src:"assets/snd_energy_plop.mp3|assets/snd_energy_plop.wav"},
-		{id:"abduct", src:"assets/snd_abduct.mp3|assets/snd_abduct.wav"},
-		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav"},
+		
+		{id:"beam_loop", src:"assets/snd_beam_loop.mp3|assets/snd_beam_loop.wav|assets/snd_beam_loop.ogg"},
+		{id:"beam_start", src:"assets/snd_beam_start.mp3|assets/snd_beam_start.wav|assets/snd_beam_start.ogg"},
+		{id:"pistol", src:"assets/snd_pistol.mp3|assets/snd_pistol.wav|assets/snd_pistol.ogg"},
+		{id:"police_siren", src:"assets/snd_police_siren.mp3|assets/snd_police_siren.wav|assets/snd_police_siren.ogg"},
+		{id:"rocket", src:"assets/snd_rocket.mp3|assets/snd_rocket.wav|assets/snd_rocket.ogg"},
+		{id:"splat", src:"assets/snd_splat.mp3|assets/snd_splat.wav|assets/snd_splat.ogg"},
+		{id:"car_splat", src:"assets/snd_car_splat.mp3|assets/snd_car_splat.wav|assets/snd_car_splat.ogg"},
+		{id:"scream", src:"assets/snd_scream.mp3|assets/snd_scream.wav|assets/snd_scream.ogg"},
+		{id:"energy", src:"assets/snd_energy.mp3|assets/snd_energy.wav|assets/snd_energy.ogg"},
+		{id:"hit", src:"assets/snd_hit.mp3|assets/snd_hit.wav|assets/snd_hit.ogg"},
+		{id:"coin", src:"assets/snd_coin.mp3|assets/snd_coin.wav|assets/snd_coin.ogg"},
+		{id:"energy_plop", src:"assets/snd_energy_plop.mp3|assets/snd_energy_plop.wav|assets/snd_energy_plop.ogg"},
+		{id:"abduct", src:"assets/snd_abduct.mp3|assets/snd_abduct.wav|assets/snd_abduct.ogg"},
+		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav|assets/snd_music_intro.ogg"},
+		
 		{id:"ship", src:"assets/anim_ship_spin.png"},
 		{id:"civilian", src:"assets/civilian.png"},
 		{id:"military", src:"assets/military.png"},
@@ -119,8 +122,9 @@ $(document).ready(function(){
 	}
 	
 	if( skipChecklist ){
-		$('#checklist').hide();
 		PagePreInit();
+	}else{
+		$('#checklist').show();
 	}
 
 });
@@ -143,20 +147,33 @@ if(Modernizr.touch){
 			y = acelera.y,
 			z = acelera.z;
 			
-		
-		if( mousePos.x < 0 ){
-			mousePos.x = 0;
-		}else if( mousePos.x > screen_width ){
-			mousePos.x = screen_width;
-		}else{
-			mousePos.x += Math.floor(x)*presets.accelerometerSensitivity;
+			if( y > 0 ){
+				y=-y;
+				x=-x;
+			}
+			
+		if( !upsideDown && Math.abs(x) > 8 ){
+			upsideDown = true;
+			alert('hold the device upright in portrait orientation.');
+		}else if( upsideDown && Math.abs(x) <= 8 ){
+			upsideDown = false;
 		}
-		if( mousePos.y < 0 ){
-			mousePos.y = 0;
-		}else if( mousePos.y > screen_height ){
-			mousePos.y = screen_height;
-		}else{
-			mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
+		if( !upsideDown ){
+			
+			if( mousePos.x < 0 ){
+				mousePos.x = 0;
+			}else if( mousePos.x > screen_width ){
+				mousePos.x = screen_width;
+			}else{
+				mousePos.x += Math.floor(x)*presets.accelerometerSensitivity;
+			}
+			if( mousePos.y < 0 ){
+				mousePos.y = 0;
+			}else if( mousePos.y > screen_height ){
+				mousePos.y = screen_height;
+			}else{
+				mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
+			}
 		}
 	});
 	

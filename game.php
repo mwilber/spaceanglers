@@ -1,4 +1,5 @@
 <?php
+	$SHARE_DESCRIPTION_SHORT = "Join the Space Anglers tournament and compete for the highest score! a GreenZeta production";
 	$SHARE_DESCRIPTION = "Join the Space Anglers tournament and compete for the highest score! Grab as many humans as you can before your energy runs out. Space Anglers, a GreenZeta production, is an HTML5 canvas experiment using the CreateJS library.";
 	$SHARE_TITLE = "SPACE ANGLERS";
 	if(isset($_GET['score'])){
@@ -86,6 +87,11 @@
 <div id="container">
 <div id="ground">
 	<header>
+		<div id="likegroup">
+			<div class="fb-like" data-href="<?=$SHARE_LINK?>" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false"></div>
+			<g:plusone size="medium" href="<?=$SHARE_LINK?>"></g:plusone>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="<?=$SHARE_LINK?>" data-text="<?=$SHARE_DESCRIPTION_SHORT?>" data-hashtags="SPACEANGLERS">Tweet</a>
+		</div>
 		<a href="http://www.greenzeta.com/" target="_blank"><img src="images/logo_header.png"/></a>
 	</header>
 	<div id="main" role="main">
@@ -95,7 +101,7 @@
 				<ul id="supported">
 					<li id="canvas">X&nbsp;&nbsp;HTML5 Canvas</li>
 					<li id="sound">X&nbsp;&nbsp;Sound</li>
-					<li id="motion">X&nbsp;&nbsp;Motion/Touch Controls<br/>&nbsp;&nbsp;&nbsp;(iPad/iPhone only)</li>
+					<li id="motion">X&nbsp;&nbsp;Motion/Touch Controls<br/>&nbsp;&nbsp;&nbsp;(iPad/iPhone only for now)</li>
 				</ul>
 				<a id="btn_proceed" href="#" onclick="return false;">Continue Anyway</a>
 			</div>
@@ -199,6 +205,15 @@
   })();
 
 </script>
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
 
 <!--[if lt IE 7 ]>
 	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>

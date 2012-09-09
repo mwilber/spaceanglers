@@ -230,6 +230,17 @@ header{
 	position: relative;
 }
 
+#likegroup{
+	z-index: 200;
+	text-align: right;
+	width: 900px;
+	margin: 0px auto 0px auto;
+}
+
+#likegroup .fb-like iframe{
+	
+}
+
 a{
 	color:#ccc;
 }
@@ -291,6 +302,10 @@ li{
 	background-image:url('../assets/panel_bkg.jpg');
 	text-align: center;
 	padding-top:50px;
+}
+
+#checklist{
+	display:none;
 }
 
 #checklist h1{
