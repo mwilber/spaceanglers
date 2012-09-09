@@ -344,7 +344,7 @@ function PageInit(){
 	presets.maxPol = 0;
 	
 	tallyMon.abducted = 0;
-	tallyMon.energy = 5;
+	tallyMon.energy = 100;
 	tallyMon.score = 0;
 
 	gameStatus = "start";
