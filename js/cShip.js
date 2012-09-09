@@ -5,16 +5,17 @@ function Ship(pName, pImg) {
 	this.actor = new Actor({
 		"name":pName,
 		"type":"ship",
-		"startkey":"spin",
+		"startkey":"warpin",
 		"spritesheet":{
 			"animations":
 			{
 				"spin": [0, 9, "spin"],
-				"warp": [10, 58, ""]
+				"warp": [10, 58, ""],
+				"warpin": [59,88, "spin"]
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 97, "width": 195, "count": 59, "regY": 50, "height": 175}
+			{"regX": 97, "width": 195, "count": 89, "regY": 50, "height": 175}
 		},
 		"position":{
 			"x":0,

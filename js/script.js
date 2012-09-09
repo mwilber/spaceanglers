@@ -142,6 +142,7 @@ function PagePreInit(){
 
 if(Modernizr.touch){
 	$(window).bind("devicemotion", function(e){
+		if(gameStatus != "over"){
 		var movitBaby = e.originalEvent,
 			acelera = movitBaby.accelerationIncludingGravity,
 			x = acelera.x,
@@ -176,10 +177,13 @@ if(Modernizr.touch){
 				mousePos.y -= Math.floor(y+presets.accelerometerYOffset)*presets.accelerometerSensitivity;
 			}
 		}
+		}
 	});
 	
 	$("#gamecanvas").bind('touchstart', function(){
+		if(gameStatus != "over"){
 		pChars[beamIdx].On();
+		}
 		return false;
 	}).bind('touchend', function(){
 		pChars[beamIdx].Off();
@@ -187,15 +191,19 @@ if(Modernizr.touch){
 	});
 }else{
 	$('#gamecanvas').mousemove(function(e) {
+		if(gameStatus != "over"){
 	    var pos = findPos(this);
 	    mousePos.x = e.pageX - pos.x;
 	    mousePos.y = e.pageY - pos.y;
 	    //var coordinateDisplay = "x=" + x + ", y=" + y;
 	    //writeCoordinateDisplay(coordinateDisplay);
+	   }
 	});
 	
 	$('#gamecanvas').mousedown(function(e) {
+		if(gameStatus != "over"){
 	    pChars[beamIdx].On();
+	   }
 	    return false;
 	});
 	
@@ -336,7 +344,7 @@ function PageInit(){
 	presets.maxPol = 0;
 	
 	tallyMon.abducted = 0;
-	tallyMon.energy = 100;
+	tallyMon.energy = 5;
 	tallyMon.score = 0;
 
 	gameStatus = "start";
