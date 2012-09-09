@@ -113,7 +113,7 @@ $(document).ready(function(){
 		$('#checklist #supported #canvas').show();
 	}
 	
-	if (Modernizr.touce && !Modernizr.devicemotion) {
+	if (Modernizr.touch && !Modernizr.devicemotion) {
 		skipChecklist = false;
 		$('#checklist #supported #motion').show();
 	}
