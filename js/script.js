@@ -76,6 +76,8 @@ var manifest = [
 		{id:"energy_plop", src:"assets/snd_energy_plop.mp3|assets/snd_energy_plop.wav|assets/snd_energy_plop.ogg"},
 		{id:"abduct", src:"assets/snd_abduct.mp3|assets/snd_abduct.wav|assets/snd_abduct.ogg"},
 		{id:"music_intro", src:"assets/snd_music_intro.mp3|assets/snd_music_intro.wav|assets/snd_music_intro.ogg"},
+		{id:"warp_in", src:"assets/snd_warp_in.mp3|assets/snd_warp_in.wav|assets/snd_warp_in.ogg"},
+		{id:"warp_out", src:"assets/snd_warp_out.mp3|assets/snd_warp_out.wav|assets/snd_warp_out.ogg"},
 		
 		{id:"ship", src:"assets/ship.png"},
 		{id:"civilian", src:"assets/civilian.png"},
@@ -141,6 +143,9 @@ function PagePreInit(){
 
 
 if(Modernizr.touch){
+	
+	$('#introcontrols').attr('src','assets/intro_pg_2b.png');
+	
 	$(window).bind("devicemotion", function(e){
 		if(gameStatus != "over"){
 		var movitBaby = e.originalEvent,
@@ -253,6 +258,15 @@ $('#btn_skip').click(function(){
 $('#btn_start').click(function(){
 	$('.panel').hide();
 	$('#intro').show();
+});
+
+$('#btn_about').click(function(){
+	$('.panel').hide();
+	$('#about').show();
+});
+
+$('#btn_homeb').click(function(){
+	$('#start').show();
 });
 
 $('#btn_intro_start').click(function(){
@@ -432,9 +446,6 @@ function HandleImageLoad(e) {
 
     if (numberOfImagesLoaded == (GetObjectPropertyCount(images))) {
 		numberOfImagesLoaded = 0;
-        //StartGame();
-        //$('.panel').hide();
-		//InitGame();
 		$('#loading').hide();
 	}
 }
@@ -509,7 +520,7 @@ function StartGame(){
 	// Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
 	stage.addChild(pChars[pChars.length-1].actor.sprite);
 	shipIdx = pChars.length-1;
-	
+	createjs.SoundJS.play("warp_in", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 1);
 }
 
 function tick(){
@@ -669,6 +680,7 @@ function WarpOut(){
 	
 	pChars[beamIdx].Off();
 	gameStatus = "over";
+	createjs.SoundJS.play("warp_out", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 1);
 	pChars[shipIdx].actor.sprite.gotoAndPlay("warp");
 }
 

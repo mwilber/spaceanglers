@@ -115,6 +115,16 @@
 					<li><a id="btn_start" href="#" onclick="return false;">Start Game</a></li>
 					<li><a id="btn_skip" href="#" onclick="return false;">Skip Instructions</a></li>
 					<li><a id="btn_highscore" href="#" onclick="return false;">High Score</a></li>
+					<li><a id="btn_about" href="#" onclick="return false;">About</a></li>
+				</ul>
+			</div>
+			<div id="about" class="panel" style="z-index:350;">
+				<a id="btn_homeb" href="#" onclick="return false;">Back</a>
+				<h1>About</h1>
+				<ul>
+					<li>SPACE ANGLERS is an experiment in HTML5 Canvas developed with the <a href="http://createjs.com/#!/CreateJS" target="_blank">CreateJS</a> library.</li>
+					<li>Created by Internet software developer Matthew Wilber. For more information, visit <a href="http://www.mwilber.com" target="_blank">mwilber.com</a>.</li>
+					<li>Ship's warp sound courtesy of <a href="http://www.freesound.org/people/Corsica_S/" target="_blank">Corsica_S</a></li>
 				</ul>
 			</div>
 			<div id="intro" class="panel" style="z-index:300;">
@@ -124,7 +134,7 @@
 				      <img src="assets/intro_pg_1.png" width="800" height="450"/>
 				    </li>
 				    <li>
-				      <img src="assets/intro_pg_2.png" width="800" height="450"/>
+				      <img id="introcontrols" src="assets/intro_pg_2.png" width="800" height="450"/>
 				    </li>
 				    <li>
 				      <img src="assets/intro_pg_3.png" width="800" height="450"/>
