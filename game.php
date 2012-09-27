@@ -36,6 +36,7 @@
 	<meta name="viewport" content="width=900">
 
 	<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
 	<link rel='stylesheet' id='camera-css'  href='css/flexslider.css' type='text/css' media='all'>
@@ -162,7 +163,8 @@
 				</ul>
 			</div>
 			<div id="hud" style="z-index: 110;">
-				<div id="abducted">Abducted: <span>0</span></div>
+				<div id="igscore">Score:<span>0</span></div>
+				<div id="abducted"><img src="images/civ.png"/>:<span>0</span></div>
 				<div id="energybarframe">
 					<div id="energybar"><div id="energy">Energy: <span>100%</span></div></div>
 				</div>
@@ -180,6 +182,24 @@
 	</div>
 </div><!--! end of #ground -->
 </div> <!--! end of #container -->
+<footer>
+	<div class="col">
+		<!--
+			<a style="float:left; width:auto;" href="https://play.google.com/store/apps/details?id=com.greenzeta.greenzeta.jawsconverter" target="_blank"><img src="images/playstore.png" style="height:45px;"/></a>
+			<a style="float:left; width:auto;" href="https://chrome.google.com/webstore/detail/lbaefopnbomfajgakfbmoejkinmgcjed" target="_blank"><img src="images/chromestore.png" style="height:45px;"/></a>
+		-->
+		<h1>About</h1>
+		<p>
+			SPACE ANGLERS is an experiment in HTML5 Canvas by Internet software developer Matthew Wilber.
+			&lt;canvas&gt; animation and sound were developed with the <a href="http://createjs.com/#!/CreateJS" target="_blank">CreateJS</a> libraries.
+			For more information, visit <a href="http://www.mwilber.com" target="_blank">mwilber.com</a>.
+		</p>
+		<p>
+			Ship's warp sound courtesy of <a href="http://www.freesound.org/people/Corsica_S/" target="_blank">Corsica_S</a>
+		</p>
+	</div>
+	<a id="gzlink" href="http://www.greenzeta.com" target="_blank">A GreenZeta Production</a>
+</footer>
 <script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>

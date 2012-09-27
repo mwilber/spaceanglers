@@ -360,6 +360,8 @@ function PageInit(){
 	tallyMon.abducted = 0;
 	tallyMon.energy = 100;
 	tallyMon.score = 0;
+	$('#abducted span').html(tallyMon.abducted);
+	$('#igscore span').html(tallyMon.score);
 
 	gameStatus = "start";
 	endTimer = 0;
@@ -745,6 +747,7 @@ function Abduct(pArr, pIdx){
 			tallyMon.score += (presets.abductVal*multiplierTraq);
 			DebugOut(tallyMon.abducted);
 			$('#abducted span').html(tallyMon.abducted);
+			$('#igscore span').html(tallyMon.score);
 			var aVol = (multiplierTraq/10);
 			if(aVol > 1) aVol = 1;
 			createjs.SoundJS.play("abduct", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, aVol);

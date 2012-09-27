@@ -271,7 +271,7 @@ li{
 	margin: 0px 0px;
 	background-image:url('../images/ground_frame.png');
 	background-repeat:repeat-x;
-	background-position:bottom center;
+	background-position: 50% 500px;
 }
 
 #like, #nolike{
@@ -374,6 +374,10 @@ li{
 	margin-left:0px;
 }
 
+#btn_about{
+	display:none;
+}
+
 #about ul li{
 	font-size:14px;
 	width:450px;
@@ -385,6 +389,10 @@ li{
 
 .flexslider{
 	top: -50px;
+}
+
+#main{
+	overflow: hidden;
 }
 
 #gamecanvas{
@@ -408,7 +416,19 @@ li{
 }
 
 #abducted{
+	display:none;
 	float:right;
+	margin-right:15px;
+	width: 95px;
+}
+
+#abducted img{
+	height:20px;
+}
+
+#igscore{
+	float:right;
+	width: 160px;
 }
 
 #energybarframe{
@@ -471,6 +491,56 @@ li{
 	-moz-border-radius: 15px; 
 	-webkit-border-radius: 15px; */
 }
+
+footer {
+	font-family: 'Anton', sans-serif;
+	margin: 10px auto 0px auto;
+	width: 810px;
+	height: 60px;
+	color:#fff;
+}
+
+footer a{
+    color:#ff5;
+}
+
+footer a:visited{
+    color:#ff5;
+}
+
+footer #addtopage{
+	margin-left: 50px;
+	float: left;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+footer #gzlink{
+	display: block;
+    padding: 6px 10px;
+	float:right;
+	text-align: right;
+	font-size: 18px;
+	text-decoration: none;
+    width:200px;
+}
+
+footer .col{
+	float:left;
+	width:500px;
+	font-family:Arial, Helvetica, sans-serif;
+	margin-left:50px;
+}
+
+footer .col h1{
+	color:#ff5;
+	font-size:18px;
+}
+
+footer .col p{
+	margin-top:5px;
+}
+
 
 #fb-root{
 	clear:both;
