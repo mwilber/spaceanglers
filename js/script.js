@@ -595,6 +595,8 @@ function tick(){
 			$('#energybar').css('width',(tallyMon.energy*3)+"px");
 			if( tallyMon.energy < 25 ){
 				if( createjs.Ticker.getTicks() % (presets.fps/2) == 0) $('#energybar').toggleClass('white');
+			}else if(tallyMon.energy > 25 ){
+				$('#energybar').removeClass('white');
 			}
 		
 		//}
@@ -675,6 +677,11 @@ function EnergyUpdate(pVal){
 	$('#energy span').html(Math.floor(tallyMon.energy)+"%");
 	if( tallyMon.energy <= 0 && endTimer == 0 ){
 		WarpOut();
+	}
+	if( tallyMon.energy <= 25 && ((tallyMon.energy - pVal) > 25) ){
+		pChars[shipIdx].actor.sprite.gotoAndPlay("lownrg");
+	}else if( tallyMon.energy >= 25 && ((tallyMon.energy - pVal) < 25) ){
+		pChars[shipIdx].actor.sprite.gotoAndPlay("spin");
 	}
 }
 

@@ -10,12 +10,13 @@ function Ship(pName, pImg) {
 			"animations":
 			{
 				"spin": [0, 9, "spin"],
-				"warp": [10, 58, ""],
-				"warpin": [59,88, "spin"]
+				"warp": [10, 49, ""],
+				"warpin": [50,89, "spin"],
+				"lownrg": [90,99, "lownrg"]
 			},
 			"images": [pImg],
 			"frames":
-			{"regX": 97, "width": 195, "count": 89, "regY": 50, "height": 175}
+			{"count": 100, "regY": 50, "width": 195, "regX": 97, "height": 175}
 		},
 		"position":{
 			"x":0,
