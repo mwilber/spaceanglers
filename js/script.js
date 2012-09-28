@@ -479,6 +479,9 @@ function StartGame(){
 	
 	createjs.SoundJS.play("coin", createjs.SoundJS.INTERRUPT_ANY, 0, 0, 0, 0.4);
 	
+	// Mark the first frame
+	startTick = createjs.Ticker.getTicks();
+	
 	for( idx=0; idx<(presets.maxCiv); idx++ ){
 		var tmpPos = Math.floor(Math.random()*(screen_width-(presets.margin*2)))+presets.margin;
 		npCharsCiv.push(new Civilian("civilian"+idx, tmpPos, screen_height-presets.ground, images['civilian']));
