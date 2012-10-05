@@ -251,36 +251,43 @@ $('#btn_proceed').click(function(){
 });
 
 $('#btn_skip').click(function(){
+	_gaq.push(['_trackEvent', 'Skip Instructions', 'clicked', '']);
 	$('.panel').hide();
 	InitGame();
 });
 
 $('#btn_start').click(function(){
+	_gaq.push(['_trackEvent', 'Instructions', 'clicked', '']);
 	$('.panel').hide();
 	$('#intro').show();
 });
 
 $('#btn_about').click(function(){
+	_gaq.push(['_trackEvent', 'About', 'clicked', '']);
 	$('.panel').hide();
 	$('#about').show();
 });
 
 $('#btn_homeb').click(function(){
+	_gaq.push(['_trackEvent', 'Home B', 'clicked', '']);
 	$('#start').show();
 });
 
 $('#btn_intro_start').click(function(){
+	_gaq.push(['_trackEvent', 'Start', 'clicked', '']);
 	$('.panel').hide();
 	InitGame();
 });
 
 $('#btn_highscore').click(function(){
+	_gaq.push(['_trackEvent', 'Show High Score', 'clicked', '']);
 	$('.panel').hide();
 	$('#scorebox').show();
 	$('#scorebox #scores').load('reactor/score/topten');
 });
 
 $('#btn_viewhighscore').click(function(){
+	_gaq.push(['_trackEvent', 'Post-Game High Score', 'clicked', '']);
 	PageInit();
 	$('.panel').hide();
 	$('#scorebox').show();
@@ -292,11 +299,13 @@ $('#btn_home').click(function(){
 });
 
 $('#btn_restart').click(function(){
+	_gaq.push(['_trackEvent', 'Restart', 'clicked', '']);
 	$('#start').show();
 	PageInit();
 });
 
 $('#btn_savescore').click(function(){
+	_gaq.push(['_trackEvent', 'Save High Score', 'clicked', '\''+tallyMon.score+'\'']);
 	//tallyMon.score\
 	DebugOut(tallyMon);
 	DebugOut(tallyMon.score);
@@ -315,17 +324,20 @@ $('#btn_savescore').click(function(){
 });
 
 $('#facebook').click(function(){
+	_gaq.push(['_trackEvent', 'Facebook Share', 'clicked', '\''+tallyMon.score+'\'']);
 	WallPost(social['link'] , "I scored "+tallyMon.score+" on Space Anglers!", social['description'] , social['image'] , '');
 	return false;
 });
 
 $('#tweeters').click(function(){
+	_gaq.push(['_trackEvent', 'Tweeter Share', 'clicked', '\''+tallyMon.score+'\'']);
 	var twcontent = "I scored "+tallyMon.score+" on Space Anglers! An HTML5 canvas game by GreenZeta "+social['link'];
 	openpopup('http://twitter.com/home?status='+escape(twcontent),'tweeters',550,450);
 	return false;
 });
 
 $('#googleplus').click(function(){
+	_gaq.push(['_trackEvent', 'GPlus Share', 'clicked', '\''+tallyMon.score+'\'']);
 	var url = "https://plus.google.com/share?url="+escape(social['link']+"?score="+tallyMon.score);
 	openpopup(url,'gplus',550,450);
 	return false;
@@ -697,6 +709,7 @@ function WarpOut(){
 }
 
 function EndGame(){
+	_gaq.push(['_trackEvent', 'End Game', 'trigger', '\''+tallyMon.score+'\'']);
 	createjs.SoundJS.play("music_intro", createjs.SoundJS.INTERRUPT_ANY, 0, 0, -1, 0.2);
 	DebugOut("Game Over");
 	$('#endgame #score span').html(tallyMon.score);
