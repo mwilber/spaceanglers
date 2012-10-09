@@ -125,8 +125,10 @@ $(document).ready(function(){
 	}
 	
 	if( skipChecklist ){
+		_gaq.push(['_trackEvent', 'No Limitations', 'trigger', '']);
 		PagePreInit();
 	}else{
+		_gaq.push(['_trackEvent', 'Show Limitations', 'trigger', '']);
 		$('#checklist').show();
 	}
 
@@ -246,6 +248,7 @@ $('body').bind('LikeStatus', function(event, pLikeStatus) {
 });
 
 $('#btn_proceed').click(function(){
+	_gaq.push(['_trackEvent', 'Continue w Limitations', 'clicked', '']);
 	$('#checklist').hide();
 	PagePreInit();
 });
