@@ -40,22 +40,22 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/jquery.facebook.multifriend.select.css" />
 	<link rel='stylesheet' id='camera-css'  href='css/flexslider.css' type='text/css' media='all'>
-	
+
 	<script type="text/javascript">
 		var social = [];
 		social['title'] = "<?=$SHARE_TITLE?>";
 		social['description'] = "<?=$SHARE_DESCRIPTION?>";
 		social['image'] = "<?=$SHARE_IMAGE?>";
 		social['link'] = "<?=$SHARE_LINK?>";
-		
-		// this sets the namespace for CreateJS to the window object, so you can instantiate objects without specifying 
+
+		// this sets the namespace for CreateJS to the window object, so you can instantiate objects without specifying
 		// the namespace: "new Graphics()" instead of "new createjs.Graphics()"
 		var createjs = window;
 	</script>
-	
+
 	<script type="text/javascript" src="js/libs/preloadjs-0.2.0.min.js"></script>
 	<script type="text/javascript" src="js/libs/easeljs-0.5.0.min.js"></script>
-	
+
 	<script src="js/libs/easeljs/utils/UID.js"></script>
 	<script src="js/libs/easeljs/geom/Matrix2D.js"></script>
 	<script src="js/libs/easeljs/events/MouseEvent.js"></script>
@@ -80,13 +80,65 @@
 
 
 	<script src="js/libs/modernizr.custom.35563.js"></script>
-	
+
 	<script type="text/javascript" src="js/fbconfig.js"></script>
-	
+
 </head>
 <body>
 <div id="container">
 <div id="ground">
+	<div id="banner_group" style="height: 90px; margin-bottom: 10px;">
+	<div id="gzad_container" style="position:absolute; z-index:10000; margin: 0px; width: 100%; height:90px; -webkit-transition: height 0.25s linear 0.25s, -webkit-transform 0.25s linear 0.25s; transition: height 0.25s linear 0.25s, transform 0.25s linear 0.25s;">
+	<a id="banner_close" href="#" onclick="GZAD_collapse(); return false;" class="banner_close fa fa-times" style="margin-top:75px; margin-left:90%; display: none; position: absolute; width: auto; height: auto; z-index: 60000; background: #000; border-radius: 50%; border: solid 2px #fff; color: #fff; font-size: 24px; font-weight: bold; text-decoration: none; text-align: center; line-height: 32px;"></a>
+	<iframe id="gzad_banner" src="" scrolling="no" border="0" marginwidth="0" style="width:100%; height:100%; /*border:solid 1px #e3343f;*/ margin-bottom:20px; position: absolute; padding:0px; overflow: hidden; -webkit-transition: height 0.25s linear 0.25s, -webkit-transform 0.25s linear 0.25s; transition: height 0.25s linear 0.25s, transform 0.25s linear 0.25s;  -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;" frameborder="0"></iframe>
+	</div>
+	</div>
+	<script type="text/javascript">
+		function GZAD_externallink(pURL){
+		    //'?utm_source=gzad&utm_medium=app&utm_campaign=gzad_banner'
+		    window.open(pURL,'_system');
+		}
+
+		function GZAD_expand(){
+		    //alert('expand here');
+		    //$('#banner_group').addClass('expanded');
+		    document.getElementById('gzad_container').style.height = '620px';
+		    document.getElementById('banner_close').style.display = "block";
+		}
+
+		function GZAD_collapse(){
+		    //alert('expand here');
+		    document.getElementById('gzad_container').style.height = '90px';
+		    document.getElementById('banner_close').style.display = "none";
+		}
+		//$(document).ready(function(){
+			var al = 'https://s3.amazonaws.com/gzads/live.html';
+			var ifrm = document.getElementById('gzad_banner');
+			var request = new XMLHttpRequest();
+			request.open('GET', al, true);
+
+			request.onload = function() {
+				if (request.status >= 200 && request.status < 400) {
+				    // Success!
+					ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+					ifrm.document.open();
+					ifrm.document.write(request.responseText);
+					ifrm.document.close();
+					} else {
+					// We reached our target server, but it returned an error
+					document.getElementById('gzad_banner').src = 'https://s3.amazonaws.com/gzads/backup.html';
+					}
+			};
+
+			request.onerror = function() {
+					// There was a connection error of some sort
+					document.getElementById('gzad_banner').src = 'https://s3.amazonaws.com/gzads/backup.html';
+			};
+
+			request.send();
+
+		//});
+	</script>
 	<header>
 		<div id="likegroup">
 			<div class="fb-like" data-href="<?=$SHARE_LINK?>" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false"></div>
@@ -153,7 +205,7 @@
 				<div id="scores"><ul><li>Loading...</li></ul></div>
 			</div>
 			<div id="endgame" class="panel" style="z-index:150;">
-				<h1>Game Over</h1>			
+				<h1>Game Over</h1>
 				<ul style="margin-top:40px;">
 					<li id="score">Final Score: <span>0</span></li>
 					<li id="grp_savescore"><input type="text" id="scorename" value="Name" onfocus="if($(this).val()=='Name') $(this).val('');" onblur="if($(this).val()=='') $(this).val('Name');"/> <a id="btn_savescore" href="#" onclick="return false;">Save</a></li>
@@ -200,7 +252,7 @@
 	</div>
 	<a id="gzlink" href="http://www.greenzeta.com" target="_blank">A GreenZeta Production</a>
 </footer>
-<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>	
+<script type="text/javascript" src="http://connect.facebook.net/en_US/all.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
 
