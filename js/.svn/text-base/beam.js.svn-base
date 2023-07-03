@@ -1,0 +1,14 @@
+var Beam = new function() {
+	var focus = new Path([-5,20],[5,20],[10,80],[-10,80]);
+	focus.fillColor = '#ff6';
+	var group = new Group(focus);
+	group.position = view.bounds.center;
+	group.visible = true;
+	return {
+		item: group,
+		moveTo: function(position) {
+			group.position = position;
+			//keepInView(group);
+		},
+	}
+}

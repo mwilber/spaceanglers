@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "KnockHTF49Lit";
+    font-style: normal;
+    font-weight: normal;
+    src: local("KnockHTF49Lit"), local("KnockHTF49Lit"), 
+    	url("https://fierce-summer-1062.herokuapp.com/fonts/KnockHTF49Lit.woff") format("woff"), 
+    	url("https://fierce-summer-1062.herokuapp.com/fonts/KnockHTF49Lit.ttf") format("truetype"), 
+    	url("https://fierce-summer-1062.herokuapp.com/fonts/KnockHTF49Lit.svg#KnockHTF49Lit") format("svg");
+}

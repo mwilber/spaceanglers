@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'FiveMinutesRegular';
+    src: url('https://fierce-summer-1062.herokuapp.com/fonts/five_minutes-webfont.eot');
+    src: url('https://fierce-summer-1062.herokuapp.com/fonts/five_minutes-webfont.eot?#iefix') format('embedded-opentype'),
+         url('https://fierce-summer-1062.herokuapp.com/fonts/five_minutes-webfont.woff') format('woff'),
+         url('https://fierce-summer-1062.herokuapp.com/fonts/five_minutes-webfont.ttf') format('truetype'),
+         url('https://fierce-summer-1062.herokuapp.com/fonts/five_minutes-webfont.svg#FiveMinutesRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}

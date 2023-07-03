@@ -1,0 +1,565 @@
+/* Author: Matthew Wilber (mwilber@gmail.com)
+
+*/
+project.currentStyle.strokeColor = 'white';
+
+
+// Game Preferences
+////////////////////////////////////////////////////////////////////////////
+var presets = {
+	margin: 100,
+	g: 0.2,			// Gravity
+	beampwr: 2,		// speed beam lifts actors
+	ground: 10,		// y distance from bottom actors are spawned
+	ceiling: 100,	// min height ship can reach
+	touchCt: 1,
+	lastlevel: 2, 	// # represents array idx
+	dmgBullet: 1,
+};
+
+var levels = [
+	{
+		mils: 3,
+		milreact: 200,
+		civs: 5,
+		quota: 5,
+		beamDrain: .01,
+	},
+	{
+		mils: 4,
+		milreact: 100,
+		civs: 10,
+		quota: 7,
+		beamDrain: .05,
+	},
+	{
+		mils: 5,
+		milreact: 50,
+		civs: 15,
+		quota: 9,
+		beamDrain: .1,
+	}
+];
+
+var trackerLine = new Path(new Point(0,0), new Point(0,0));
+
+
+// Event Methods
+////////////////////////////////////////////////////////////////////////////
+function onFrame(event) {
+	
+	//var angle = Math.atan2(Ship.item.position.y - view.size.height-presets.ground, Ship.item.position.x - view.size.width/2);
+	//angle = Math.floor(360-(180*(((-angle*100)/3)/100)));
+	//document.getElementById('debug').innerHTML = angle;
+	
+	Bullets.move();
+	Beam.checkCollisions();
+	Ship.checkCollisions();
+	for( idx in Actors.Civ ){
+		switch( Actors.Civ[idx].status ){
+			case 'alive':
+				Actors.Civ[idx].ambulate();
+				break;
+			case 'rising':
+				Actors.Civ[idx].levitate();
+				break;
+			case 'falling':
+				Actors.Civ[idx].gravitate();
+				break;
+		}
+		
+	}
+	for( idx in Actors.Mil ){
+		switch( Actors.Mil[idx].status ){
+			case 'alive':
+				Actors.Mil[idx].ambulate();
+				break;
+			case 'rising':
+				Actors.Mil[idx].levitate();
+				break;
+			case 'falling':
+				Actors.Mil[idx].gravitate();
+				break;
+			case 'firing':
+				Actors.Mil[idx].obliterate();
+				break;
+		}
+		
+	}
+}
+
+function onKeyUp(event) {
+
+	if (event.key == 'r') {
+		Score.resetGame();
+	}
+	if( event.key == 'd') {
+		Energy.deplete(1);
+	}
+	if( event.key == 'l') {
+		Score.levelUp();
+	}
+	if( event.key == 's') {
+		Bullets.fire(new Point(200,200), 0);
+	}
+	// Show stats:
+//	if (event.key == 'f') {
+//		var statHolder = document.getElementById('statholder');
+//		statHolder.style.display = (statHolder.style.display == 'block')
+//				? 'none' : 'block';
+//	}
+}
+
+function onMouseDown(event) {
+	if( Score.gameon ){
+		Beam.armed--;
+		if( Beam.armed == 0 ){
+			Beam.item.visible = true;
+		}	
+	}
+}
+
+function onMouseUp(event) {
+	if( Score.gameon ){
+		Beam.item.visible = false;
+		Beam.armed = presets.touchCt;
+	}
+}
+
+function onMouseMove(event) {
+    mousePos = event.point;
+    // Do not let the ship fly lower than the ceiling
+    if(mousePos.y > view.size.height-presets.ceiling){
+    	mousePos.y = view.size.height-presets.ceiling;
+    }
+    Ship.moveTo( mousePos );
+    // Adjust the shape of the beam so that it always touches bottom
+    Beam.moveTo( Ship.item.position+[0,60] );
+    Beam.item.children[1].segments[2].point = new Point(mousePos.x+4,view.size.height);
+	Beam.item.children[1].segments[3].point = new Point(mousePos.x-4,view.size.height);
+	Beam.item.children[0].segments[2].point = new Point(mousePos.x+10,view.size.height);
+	Beam.item.children[0].segments[3].point = new Point(mousePos.x-10,view.size.height);
+    
+}
+
+
+// Game Control Objects
+////////////////////////////////////////////////////////////////////////////
+var Score = new function(){
+	return{
+		level: 0,
+		abducted: 0,
+		gameon: true,
+		plusone: function(){
+			this.abducted++;
+			if( this.abducted >= levels[Score.level].quota ){
+				console.log('LEVEL COMPLETE!');
+				this.levelUp();
+			}
+		},
+		levelUp: function(){
+			if( this.level < presets.lastlevel ){
+				this.level++;
+				Actors.destroy();
+				Actors.init();
+				Energy.reset();
+				this.abducted = 0;
+				document.getElementById('levelnum').innerHTML = (this.level+1);
+			}else{
+				this.endGame();
+			}
+		},
+		endGame: function(){
+			console.log('GAME COMPLETE!');
+			this.gameon = false;
+			if( Energy.report() <= 0 ){
+				document.getElementById('loser').style.display = 'block';
+				Beam.item.visible = false;
+			}else if( this.level == presets.lastlevel){
+				Actors.destroy();
+				document.getElementById('winner').style.display = 'block';
+			}
+		},
+		resetLevel: function(){
+			Actors.destroy();
+			this.abducted = 0;
+			Actors.init();
+			Energy.reset();
+		},
+		resetGame: function(){
+			Actors.destroy();
+			this.abducted = 0;
+			this.level = 0;
+			Actors.init();
+			Energy.reset();
+		},
+	}
+}
+
+
+// Screen Control Objects
+////////////////////////////////////////////////////////////////////////////
+var Energy = new function() {
+	var energy = 100;
+	var point = new Point(200, 10);
+	var size = new Size(100, 20);
+	var rectangle = new Rectangle(point, size);
+	var meter = new Path.Rectangle(rectangle);
+	meter.strokeColor = 'green';
+	meter.fillColor = 'green';
+	var border = new Path.Rectangle(rectangle);
+	border.strokeColor = 'white';
+	
+	var group = new Group(meter,border);
+	return {
+		report: function(){
+			return energy;
+		},
+		item: group,
+		deplete: function(amount){
+			energy -= amount;
+			if( energy <= 0 ){
+				Score.endGame();
+			}else{
+				this.refresh();
+			}
+		},
+		renew: function(amount){
+			energy += amount;
+			if( energy <= 0 ){
+				Score.endGame();
+			}else{
+				this.refresh();
+			}
+		},
+		reset: function(){
+			energy = 100;
+			this.refresh();
+		},
+		refresh: function(){
+			group.removeChildren();
+			var point = new Point(200, 10);
+			var size = new Size(energy, 20);
+			var rectangle = new Rectangle(point, size);
+			var meter = new Path.Rectangle(rectangle);
+			meter.strokeColor = 'green';
+			meter.fillColor = 'green';
+			size = new Size(100, 20);
+			rectangle = new Rectangle(point, size);
+			var border = new Path.Rectangle(rectangle);
+			border.strokeColor = 'white';
+			
+			group.addChild(meter);
+			group.addChild(border);
+		},
+	}
+}
+
+var Beam = new function() {
+	var focus = new Path([-1,20],[1,20],[5,80],[-5,80]);
+	focus.fillColor = new RgbColor(1, 1, 1, 0.6);
+	focus.strokeColor = new RgbColor(1, 1, 1, 0.3);
+	var fade = new Path([-5,20],[5,20],[10,80],[-10,80]);
+	fade.fillColor = new RgbColor(1, 1, 0.5, 0.3);
+	fade.strokeColor = new RgbColor(1, 1, 0.5, 0.3);
+	var group = new Group(fade,focus);
+	group.position = view.bounds.center;
+	group.visible = false;
+	return {
+		item: group,
+		armed: presets.touchCt,
+		moveTo: function(position) {
+			group.position = position;
+			//keepInView(group);
+		},
+		checkCollisions: function() {
+			if(this.item.visible){
+				Energy.deplete(levels[Score.level].beamDrain);
+				for( idx in Actors.Civ ){
+					if (Actors.Civ[idx].status != 'dead' && Actors.Civ[idx].status != 'buried' && Actors.Civ[idx].item.bounds.intersects(this.item.bounds)) {
+						Actors.Civ[idx].status = 'rising';
+					}
+				}
+				for( idx in Actors.Mil ){
+					if (Actors.Mil[idx].status != 'dead' && Actors.Mil[idx].status != 'buried' && Actors.Mil[idx].item.bounds.intersects(this.item.bounds)) {
+						Actors.Mil[idx].status = 'rising';
+					}
+				}
+			}
+		},
+	}
+}
+
+var Ship = new function() {
+	var saucer = new Path([-90,0],[-30,20],[30,20],[90,0],[40,-20],[-40,-20],[-90,0]);
+	saucer.closed = true;
+	var seam = new Path([-90,0],[90,0]);
+	var bridge = new Path([-40,-20],[-30,-40],[30,-40],[40,-20],[-40,-20]);
+	var group = new Group(saucer, seam, bridge);
+	group.position = view.bounds.center;
+	return {
+		item: group,
+
+		angle: 0,
+
+		moveTo: function(position) {
+			group.position = position;
+			//keepInView(group);
+		},
+		checkCollisions: function() {
+			
+			if(this.item.visible){
+				for( idx in Actors.Civ ){
+					if (Actors.Civ[idx].status != 'abducted' && Actors.Civ[idx].item.bounds.intersects(this.item.bounds)) {
+						Actors.Civ[idx].confiscate();
+					}
+				}
+				
+			}
+		},
+		
+		destroy: function() {
+			this.destroyedShip = assets.destroyedShip.clone();
+			this.destroyedShip.position = this.item.position;
+			this.destroyedShip.visible = true;
+			this.item.visible = false;
+			this.stop();
+			this.item.position = view.center;
+			this.dying = true;
+		},
+		
+		destroyed: function() {
+			this.item.visible = true;
+			this.stop();
+			this.item.position = view.center;
+			this.dying = false;
+			this.destroyedShip.visible = false;
+		}
+	}
+}
+
+
+var Bullets = new function() {
+	var group = new Group();
+	var children = group.children;
+	return {
+		fire: function(position, angle) {
+			if (children.length > 4) return; 
+			var bullet = new Path.Circle(position, 0.5);
+			bullet.fillColor = 'white';
+			bullet.strokeWidth = 0;
+			bullet.data = {
+				vector: new Point({
+					angle: angle,
+					length: 10
+				}),
+				timeToDie: 58
+			};
+			bullet.position += bullet.data.vector;
+			group.addChild(bullet);
+		},
+		move: function() {
+			// check for bullet hit
+			for (var i = 0; i < children.length; i++) {
+				var bullet = children[i];
+				bullet.data.timeToDie--;
+				if (bullet.data.timeToDie < 1) {
+					bullet.remove();
+				} else {
+					bullet.position += bullet.data.vector;
+					if (Ship.item.bounds.contains(bullet.position) ) {
+						Energy.deplete(presets.dmgBullet);
+						bullet.remove();
+					}
+//					for (var r = 0; r < Rocks.children.length; r++) {
+//						var rock = Rocks.children[r];
+//						if (rock.bounds.contains(bullet.position) ) {
+//							Score.update(rock.type);
+//							Rocks.explode(rock);
+//							if (rock.type < Rocks.TYPE_SMALL ) {
+//								for (var i = 0; i < 2; i++) {
+//									Rocks.add(1, rock.type + 4, rock.position);
+//								}
+//							}
+//							rock.remove();
+//							bullet.remove();
+//						}
+//					}
+//					keepInView(bullet);
+				}
+			}
+		}
+	};
+};
+
+
+var Actors = new function(){
+	return{
+		Civ: new Array(),
+		Mil: new Array(),
+		
+		destroy: function(){
+			for( idx in Actors.Civ ){
+				Actors.Civ[idx].item.remove();
+			}
+			for( idx in Actors.Mil ){
+				Actors.Mil[idx].item.remove();
+			}
+		},
+		
+		init: function(){
+			this.Civ = new Array();
+			for( idx=0; idx<levels[Score.level].civs; idx++){
+				this.Civ[idx] = new function() {
+					var head = new Path.Circle(new Point(Math.floor(Math.random()*(view.size.width-(presets.margin*2)))+presets.margin, view.size.height-presets.ground), 2);
+					var dead = new Path.Circle(head.position+[0,4], 2);
+					dead.fillColor = "#f00";
+					dead.strokeColor = "#f00";
+					dead.scale(5, .5);
+					dead.visible = false;
+					var group = new Group(head, dead);
+					return{
+						item: group,
+						speed: -1,
+						moving: true,
+						gforce: presets.g,
+						status: 'alive',
+						
+						levitate: function(){
+							this.gforce = presets.g;
+							this.item.position.x = Beam.item.position.x;
+							this.item.position.y = this.item.position.y-presets.beampwr;
+							this.status = 'falling';
+						},
+						gravitate: function(){
+							// check if stopped
+							if(group.position.y < view.size.height-10){
+								this.gforce += presets.g;
+								group.position = group.position+[0,this.gforce];
+							}else if( this.gforce > 7 ){
+								group.position.y = view.size.height-presets.ground;
+								this.terminate();
+							}else{
+								group.position.y = view.size.height-presets.ground;
+								this.status = 'alive';
+								this.gforce = presets.g;
+							}
+						},
+						ambulate: function(){
+							if(this.moving){
+								// Change direction?
+								if( group.position.x < presets.margin ){
+									this.speed = 1;
+								}else if( group.position.x > (view.size.width-presets.margin) ){
+									this.speed = -1;
+								}else if( Math.floor(Math.random()*50) == 0 ){
+									this.speed = -this.speed;
+								}
+								group.position.x += this.speed;
+							}	
+						},
+						terminate: function(){
+							this.status = 'dead';
+							group.children[0].visible = false;
+							group.children[1].visible = true;
+						},
+						confiscate: function(){
+							this.status = 'abducted';
+							Score.plusone();
+							console.log("Abductee: "+Score.abducted);
+							group.position = new Point(view.size.width-(10*Score.abducted),10);
+						}
+					}/*end return*/
+				}/*end civ */
+			}/*end for */
+			
+			this.Mil = new Array();
+			for( idx=0; idx<levels[Score.level].mils; idx++){
+				this.Mil[idx] = new function() {
+					var endpos = Math.floor(Math.random()*(view.size.width/5));
+					endpos  = Math.floor(endpos+(view.size.width/5));
+					if( Math.floor(Math.random()*10) < 5 ){
+						endpos = Math.floor(endpos+((view.size.width/5)*2));
+					}
+					var startpos = -Math.floor(Math.random()*presets.margin);
+					if( endpos > view.size.width/2 ){
+						startpos = view.size.width+Math.floor(Math.random()*presets.margin);
+					}
+					var head = new Path.Circle(new Point(startpos, view.size.height-presets.ground), 2);
+					head.fillColor = "#0f0";
+					head.strokeColor = "#0f0";
+					var dead = new Path.Circle(head.position+[0,4], 2);
+					dead.fillColor = "#f00";
+					dead.strokeColor = "#f00";
+					dead.scale(5, .5);
+					dead.visible = false;
+					var group = new Group(head, dead);
+					return{
+						item: group,
+						speed: -1,
+						moving: true,
+						gforce: presets.g,
+						status: 'alive',
+						
+						levitate: function(){
+							this.gforce = presets.g;
+							this.item.position.x = Beam.item.position.x;
+							this.item.position.y = this.item.position.y-presets.beampwr;
+							this.status = 'falling';
+						},
+						gravitate: function(){
+							// check if stopped
+							if(group.position.y < view.size.height-10){
+								this.gforce += presets.g;
+								group.position = group.position+[0,this.gforce];
+							}else if( this.gforce > 7 ){
+								group.position.y = view.size.height-presets.ground;
+								this.terminate();
+							}else{
+								group.position.y = view.size.height-presets.ground;
+								this.status = 'alive';
+								this.gforce = presets.g;
+							}
+						},
+						ambulate: function(){
+							if(this.moving){
+								// Change direction?
+								if( group.position.x == endpos ){
+									this.status = 'firing';
+								}else if( group.position.x > endpos  ){
+									this.speed = -1;
+								}else{
+									this.speed = 1;
+								}
+								group.position.x += this.speed;
+							}	
+						},
+						obliterate: function(){
+							if( Math.floor(Math.random()*levels[Score.level].milreact) == 0 ){
+								// Take aim
+								var angle = Math.atan2(Ship.item.position.y - this.item.position.y, Ship.item.position.x - this.item.position.x);
+								angle = Math.floor(360-(180*(((-angle*100)/3)/100)));
+								Bullets.fire(this.item.position, angle);
+							}
+						},
+						terminate: function(){
+							this.status = 'dead';
+							group.children[0].visible = false;
+							group.children[1].visible = true;
+						},
+						confiscate: function(){
+							this.status = 'abducted';
+							Score.plusone();
+							console.log("Abductee: "+Score.abducted);
+							group.position = new Point(view.size.width-(10*Score.abducted),10);
+						}
+					}/*end return*/
+				}/*end civ */
+			}/*end for */
+			
+		}/*end init */
+	}/*end return*/
+}/*end actors*/
+
+
+Actors.init();
